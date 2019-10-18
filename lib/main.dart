@@ -13,15 +13,25 @@ void main() => runApp(
   )
 );
 
-class MyApp extends StatelessWidget {
-  final appTitle = 'Sudoku Game';
+  final appTitle ;
 
-  Locale locale;
+  MyApp({Key key, this.appTitle}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+
+}
+
+class _MyAppState extends State<MyApp>{
+
+  Locale locale ;
+
+  UserDataBloc userBloc ;
 
   @override
   Widget build(BuildContext context) {
-    UserDataBloc userBloc = BlocProvider.of(context);
 
+    userBloc = BlocProvider.of(context);
 
     return StreamBuilder<Locale>(
       stream: userBloc.getLocale(),
@@ -73,7 +83,7 @@ class MyApp extends StatelessWidget {
                       MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
                     );
                   },
-                  home: MyHomePage(title: appTitle),
+                  home: MyHomePage(title: widget.appTitle),
                 );
               } else {
                 return Container();
