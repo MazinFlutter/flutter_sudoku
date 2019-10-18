@@ -27,11 +27,17 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   AnimationController _controller;
 
+  Duration animationDuration = Duration(milliseconds: 200) ;
+
+  double buttonWidth ;
+
+  double buttonHeight ;
+
   @override
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: animationDuration,
       lowerBound: 0.0,
       upperBound: 0.1,
     )
@@ -42,7 +48,12 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+
     _scale = 1 - _controller.value;
+
+    buttonWidth = MediaQuery.of(context).size.width/1.9 ;
+
+    buttonHeight = MediaQuery.of(context).size.height/12;
 
     return GestureDetector(
       onTapDown: _onTapDown,
@@ -50,13 +61,15 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
       child: Transform.scale(
           scale: _scale,
           child: Container(
-            width: MediaQuery.of(context).size.width/1.9,
-            height: MediaQuery.of(context).size.height/12,
+            width: buttonWidth,
+            height: buttonHeight,
             child: RaisedButton(
               //onPressed isn't provided because it absorb the press action from GestureDetector, and won't let the scaling animation to work properly, as onTapUp isn't triggered
               //لم توضع قيمة للدالة onPressed وذلك لكونها تتجاوب مع ضغطة المستخدم وتمنع GestureDetector من عرض تأثير تغيير الحجم بصورة صحيحة.
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height/24),
+                //Set as half the height so that RaisedButton Sides are half Circles.
+                //قيمة انحراف حواف الزر هي نصف ارتفاع الزر، وذلك لتصبح الجوانب عبارة عن أنصاف دوائر.
+                  borderRadius: BorderRadius.circular(buttonHeight/2),
                   side: BorderSide(color: Colors.lightBlueAccent)
               ),
               child: Center(child: Text(widget.title,style: TextStyle(fontSize: 24.0,color: Colors.white)),),
