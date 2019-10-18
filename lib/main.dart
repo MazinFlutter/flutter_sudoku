@@ -3,15 +3,27 @@ import 'package:flutter/services.dart';
 
 import 'app_localizations_delegate.dart';
 import 'bloc_base.dart';
+import 'home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'user_data_bloc.dart';
 
-void main() => runApp(
-  BlocProvider(
-    bloc: UserDataBloc(),
-    child: MyApp(),
-  )
-);
+
+///Main App Page.
+
+
+//App is forced to used portrait mode only irrespective of the device orientation.
+//التطبيق يعمل في الوضع الرأسي فقط بغض النظر عن وضعية الجهاز.
+void main() =>  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+    .then((_) {
+      runApp(
+      BlocProvider(
+        bloc: UserDataBloc(),
+        child: MyApp(),
+      )
+  );
+});
+
+class MyApp extends StatefulWidget {
 
   final appTitle ;
 
