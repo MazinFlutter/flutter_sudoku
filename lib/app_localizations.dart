@@ -30,6 +30,11 @@ class AppLocalizations {
       'Easy' : 'Easy',
       'Medium' : 'Medium',
       'Hard' : 'Hard',
+      //Warning Dialog
+      'UnfinishedGame' : 'Unfinished Game',
+      'UnfinishedGameMessage' : 'starting a new game will delete the old one, proceed ?',
+      'Cancel' : 'Cancel',
+      'StartANewGame' : 'Start a New Game',
 
     },
     'ar': {
@@ -52,6 +57,11 @@ class AppLocalizations {
       'Easy' : 'سهل',
       'Medium' : 'متوسط',
       'Hard' : 'صعب',
+      //Warning Dialog
+      'UnfinishedGame' : 'لعبة سابقة',
+      'UnfinishedGameMessage' : 'بداية لعبة جديدة سيمحو اللعبة السابقة، متابعة ؟ ',
+      'Cancel' : 'الغاء',
+      'StartANewGame' : 'بداية لعبة جديدة',
     }
   };
 
