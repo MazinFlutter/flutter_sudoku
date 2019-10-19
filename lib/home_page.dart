@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 
 import 'animated_button.dart';
 import 'app_localizations.dart';
-
+import 'bloc_base.dart';
 import 'highscores_page.dart';
 import 'instructions_page.dart';
 import 'numbers_board.dart';
 import 'settings_page.dart';
+import 'user_data_bloc.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -20,8 +21,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>{
 
+  UserDataBloc userBloc ;
+
   @override
   Widget build(BuildContext context) {
+    userBloc = BlocProvider.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -40,9 +44,15 @@ class _MyHomePageState extends State<MyHomePage>{
                 ),
               ],
             ),
-            AnimatedButton(title: AppLocalizations.of(context, 'Continue'), onPressed: (){
+            StreamBuilder<bool>(
+              stream: userBloc.getIsThereAPreviousGame(),
+              initialData: false,
+              builder: (context, isThereAGameSnapshot){
+                return isThereAGameSnapshot.data ? AnimatedButton(title: AppLocalizations.of(context, 'Continue'), onPressed: (){
 
-            }),
+                }) : Container() ;
+              },
+            ),
             AnimatedButton(title: AppLocalizations.of(context, 'NewGame'), onPressed: (){
               moveToGame(3);
             }),
