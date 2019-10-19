@@ -9,7 +9,10 @@ import 'board_numbers.dart';
 
 class NumbersBoard extends StatefulWidget {
 
-  NumbersBoard({Key key,}) : super(key: key);
+  @required
+  final bool previousDataExist ;
+
+  NumbersBoard({Key key, this.previousDataExist}) : super(key: key);
 
   @override
   _NumbersBoardState createState() => _NumbersBoardState();
@@ -82,7 +85,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
               stream: userBloc.boardNumbersSubject,
               builder: (context, initialNumbersSnapshot){
                 if(initialNumbersSnapshot.hasData){
-                  return drawBoard(0.5, initialNumbersSnapshot.data);
+                  return drawBoard(0.5, initialNumbersSnapshot.data, widget.previousDataExist);
                 }else{
                   return CircularProgressIndicator();
                 }
@@ -112,52 +115,69 @@ class _NumbersBoardState extends State<NumbersBoard>{
     );
   }
 
-  Widget drawBoard(double innerPadding, BoardNumbers numbers){
+  Widget drawBoard(double innerPadding, BoardNumbers numbers, bool previousGameExist){
 
     double outerPadding = innerPadding * 6 ;
 
-    if(numbers.response){
-      for(int index = 0 ; index < numbers.squares.length ; index++){
-        boxBoardNumbers[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3] = cellControllers[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3].text = numbers.squares[index].value.toString() ;
-        isEditable[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3] = false ;
-      }
-    }
-
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width + 6*outerPadding ,
-      padding: EdgeInsets.all(3.0),
-      child: GridView.count(
-          crossAxisCount: 3,
-          children: List.generate(9, (i){
-            return GridView.count(
+    return StreamBuilder<bool>(
+      stream: userBloc.getIsThereAPreviousGame(),
+      initialData: false,
+      builder: (context, isThereAPreviousGameSnapshot){
+        if(isThereAPreviousGameSnapshot.data){
+          boxBoardNumbers = userBloc.userSolution ;
+          isEditable = userBloc.editableBlocks ;
+          for(int i = 0 ; i < 9 ; i++){
+            for(int j = 0 ; j < 9 ; j++){
+              cellControllers[i][j].text = boxBoardNumbers[i][j] ;
+            }
+          }
+        }else{
+          if(numbers.response){
+            for(int index = 0 ; index < numbers.squares.length ; index++){
+              boxBoardNumbers[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3] = cellControllers[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3].text = numbers.squares[index].value.toString() ;
+              isEditable[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3] = false ;
+            }
+          }
+        }
+        return Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.width + 6*outerPadding ,
+          padding: EdgeInsets.all(3.0),
+          child: GridView.count(
               crossAxisCount: 3,
-              padding: EdgeInsets.all(outerPadding),
-              children: List.generate(9, (j) {
-                return Center(
-                    child: Opacity(
-                      opacity: 0.8,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width/3,
-                        height: MediaQuery.of(context).size.width/3,
-                        decoration: BoxDecoration(border: Border.all( width: innerPadding, color: Colors.lightBlueAccent), color: currentlyChecking && isEditable[i][j] ? (isCorrect[i][j] ? (isEditable[i][j] ? Colors.white : Colors.grey[300]) : Colors.red[300]) : focusNodes[i][j].hasFocus ? Colors.blue[100] : isEditable[i][j] ? Colors.white : Colors.grey[300] ),
-                        child: TextField(enabled: isEditable[i][j], controller: cellControllers[i][j], focusNode: focusNodes[i][j], decoration: InputDecoration(isDense: false, border: InputBorder.none),textAlign: TextAlign.center, textAlignVertical: TextAlignVertical.center, enableInteractiveSelection: false,keyboardType: TextInputType.number,showCursor: false,style: TextStyle(fontSize: MediaQuery.of(context).size.width/(6*3), fontWeight: FontWeight.bold),inputFormatters: [LengthLimitingTextInputFormatter(1)], onChanged: (value){
+              children: List.generate(9, (i){
+                return GridView.count(
+                  crossAxisCount: 3,
+                  padding: EdgeInsets.all(outerPadding),
+                  children: List.generate(9, (j) {
+                    return Center(
+                      child: Opacity(
+                        opacity: 0.8,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width/3,
+                          height: MediaQuery.of(context).size.width/3,
+                          decoration: BoxDecoration(border: Border.all( width: innerPadding, color: Colors.lightBlueAccent), color: currentlyChecking && isEditable[i][j] ? (isCorrect[i][j] ? (isEditable[i][j] ? Colors.white : Colors.grey[300]) : Colors.red[300]) : focusNodes[i][j].hasFocus ? Colors.blue[100] : isEditable[i][j] ? Colors.white : Colors.grey[300] ),
+                          child: TextField(enabled: isEditable[i][j], controller: cellControllers[i][j], focusNode: focusNodes[i][j], decoration: InputDecoration(isDense: false, border: InputBorder.none),textAlign: TextAlign.center, textAlignVertical: TextAlignVertical.center, enableInteractiveSelection: false,keyboardType: TextInputType.number,showCursor: false,style: TextStyle(fontSize: MediaQuery.of(context).size.width/(6*3), fontWeight: FontWeight.bold),inputFormatters: [LengthLimitingTextInputFormatter(1)], onChanged: (value){
 
-                          boxBoardNumbers[i][j] = cellControllers[i][j].text = !'123456789'.contains(value) ? '': value  ;
-                        }, onTap: (){
-                          setState(() {
+                            boxBoardNumbers[i][j] = cellControllers[i][j].text = !'123456789'.contains(value) ? '': value  ;
+                          }, onTap: (){
+                            setState(() {
 
-                          });
-                        }),
-                      ),
-                    ), );
-              }),
-            );
-          })
-      ),
+                            });
+                          }),
+                        ),
+                      ), );
+                  }),
+                );
+              })
+          ),
+        );
+      },
     );
-
   }
+
+
+
 
   checkSolution(){
 
@@ -309,7 +329,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
   moveClock() async {
 
     Future.delayed( Duration(seconds: 1), (){
-      currentTime = DateTime.now();
+      currentTime = widget.previousDataExist ? DateTime.now().add(Duration(seconds: userBloc.pastGameDuration)) : DateTime.now() ;
       if(!gameClosing){
         setState(() {
           clock = currentTime.difference(beginningTime).toString().split('.')[0] ;
@@ -340,7 +360,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
     userBloc.setUserSolution(convertedNumbers) ;
     userBloc.setEditableBlocks(convertedEditableList) ;
     userBloc.setIsThereAPreviousGame(true) ;
-    userBloc.setPastGameDuration(currentTime.difference(beginningTime).toString()) ;
+    userBloc.setPastGameDuration(currentTime.difference(beginningTime).inSeconds) ;
     userBloc.saveGameData() ;
   }
 
