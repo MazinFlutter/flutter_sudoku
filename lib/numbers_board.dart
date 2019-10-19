@@ -105,7 +105,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
             AnimatedButton(title: AppLocalizations.of(context, 'CheckSolution'), onPressed: (){
               checkSolution();
             }),
-            Container()
+            Container(),
           ],
         ),
       ),
