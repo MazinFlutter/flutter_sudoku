@@ -25,10 +25,22 @@ class UserDataBloc extends BlocBase{
 
   var localeChoiceSubject = BehaviorSubject<String>() ;
 
+  var editableBlocksSubject = BehaviorSubject<List<String>>() ;
+
+  var userSolutionSubject = BehaviorSubject<List<String>>() ;
+
+  var isThereAPreviousGame = BehaviorSubject<bool>() ;
+
 
   Stream<MaterialColor> getColor() => colorChoiceSubject.stream.distinct().transform(transformColorChoice) ;
 
   Stream<Locale> getLocale() => localeChoiceSubject.stream.distinct().transform(transformLocaleChoice) ;
+
+  Stream<List<List<bool>>> getEditableBlocks() => editableBlocksSubject.stream.distinct().transform(transformEditableBlocksList) ;
+
+  Stream<List<List<String>>> getUserSolution() => userSolutionSubject.stream.distinct().transform(transformUserSolutionsList) ;
+
+  Stream<bool> getIsThereAPreviousGame() => isThereAPreviousGame.stream.distinct() ;
 
 
   void setColorChoice (int colorChoice){
@@ -37,6 +49,18 @@ class UserDataBloc extends BlocBase{
 
   void setLocaleChoice (String languageCode){
     localeChoiceSubject.sink.add(languageCode) ;
+  }
+
+  void setEditableBlocks (List<String> editableBlocksList){
+    editableBlocksSubject.sink.add(editableBlocksList);
+  }
+
+  void setUserSolution (List<String> userSolutionList){
+    userSolutionSubject.sink.add(userSolutionList);
+  }
+
+  void setIsThereAPreviousGame(bool isThereAGame){
+    isThereAPreviousGame.sink.add(isThereAGame);
   }
 
 
@@ -83,16 +107,25 @@ class UserDataBloc extends BlocBase{
 
   Future _populateUserFields() async {
 
-    //profilePreferences = await SharedPreferences.getInstance() ;
-
     if (profilePreferences.getKeys().length > 0) {
 
         setColorChoice(profilePreferences.getInt('Color') != null ? profilePreferences.getInt('Color') : 0);
 
         setLocaleChoice(profilePreferences.getString('Locale') != null ? profilePreferences.getString('Locale') : 'en');
 
-    }
+        //Load unfinished solution from storage if there is a one
+        //تحميل اللعبة السابقة من وحدة التخزين إذا كانت هنالك واحدة
 
+        if(profilePreferences.getBool('previousGameExist') != null){
+
+          setIsThereAPreviousGame(profilePreferences.getBool('previousGameExist'));
+
+          setEditableBlocks(profilePreferences.getStringList('editableBlocksList') != null ? profilePreferences.getStringList('editableBlocksList') : <String>[]);
+
+          setUserSolution(profilePreferences.getStringList('numbersList') != null ? profilePreferences.getStringList('numberList') : <String>[]);
+
+        }
+    }
   }
 
 
@@ -123,6 +156,48 @@ class UserDataBloc extends BlocBase{
 
   });
 
+  final transformEditableBlocksList =
+  StreamTransformer<List<String>, List<List<bool>>>.fromHandlers(handleData: (storedEditableList, sink) {
+
+    List<List<bool>> convertedEditableBlocksList ;
+
+    if(storedEditableList.length == 81){
+
+      for(int i = 0 ; i < 9 ; i++){
+        convertedEditableBlocksList[i] = List.generate(9, (j) => storedEditableList[(i * 9) + j] == 'true').toList() ;
+      }
+
+      sink.add(convertedEditableBlocksList) ;
+
+    }else{
+
+      sink.addError('Invalid Editable blocks List');
+
+    }
+
+  });
+
+  final transformUserSolutionsList =
+  StreamTransformer<List<String>, List<List<String>>>.fromHandlers(handleData: (storedSolutionList, sink) {
+
+    List<List<String>> convertedSolutionList ;
+
+    if(storedSolutionList.length == 81){
+
+      for(int i = 0 ; i < 9 ; i++){
+        convertedSolutionList[i] = List.generate(9, (j) => storedSolutionList[(i * 9) + j]).toList() ;
+      }
+
+      sink.add(convertedSolutionList) ;
+
+    }else{
+
+      sink.addError('Invalid Solutions List');
+
+    }
+
+  });
+
   Future<bool> userDataExist() async{
 
     await Future.delayed(const Duration(seconds: 2), () {
@@ -137,7 +212,8 @@ class UserDataBloc extends BlocBase{
   @override
   void dispose() {
 
-    // close our StreamControllers
+    // close our StreamControllers to release resources when closing the app.
+    //تحرير الذاكرة المخصصة لتخزين الـStream Controllers عند إعلاق اللعبة
 
     boardNumbersSubject.close() ;
 
@@ -145,13 +221,25 @@ class UserDataBloc extends BlocBase{
 
     difficultyLevelSubject.close() ;
 
+    editableBlocksSubject.close() ;
+
+    isThereAPreviousGame.close() ;
+
     localeChoiceSubject.close() ;
+
+    userSolutionSubject.close() ;
 
   }
 
   saveSettings() async {
-    profilePreferences.setString('Locale',localeChoiceSubject.stream.value);
-    profilePreferences.setInt('Color', colorChoiceSubject.stream.value);
+    profilePreferences.setString('Locale',localeChoiceSubject.stream.value) ;
+    profilePreferences.setInt('Color', colorChoiceSubject.stream.value) ;
+  }
+
+  saveGameData() async {
+    profilePreferences.setStringList('numbersList', userSolutionSubject.stream.value) ;
+    profilePreferences.setStringList('editableBlocksList', editableBlocksSubject.stream.value) ;
+    profilePreferences.setBool('previousGameExist', isThereAPreviousGame.stream.value) ;
   }
 
 
