@@ -142,7 +142,6 @@ class UserDataBloc extends BlocBase{
   }
 
 
-
   final transformColorChoice =
   StreamTransformer<int, MaterialColor>.fromHandlers(handleData: (colorChoice, sink) {
 
@@ -256,6 +255,19 @@ class UserDataBloc extends BlocBase{
     profilePreferences.setStringList('editableBlocksList', editableBlocksSubject.stream.value) ;
     profilePreferences.setBool('previousGameExist', isThereAPreviousGame.stream.value) ;
     profilePreferences.setString('gameDuration', pastGameDurationSubject.stream.value) ;
+  }
+
+  deleteOldGame() async {
+    profilePreferences.setStringList('numbersList', null) ;
+    profilePreferences.setStringList('editableBlocksList', null) ;
+    profilePreferences.setBool('previousGameExist', null) ;
+    profilePreferences.setInt('gameDuration', null) ;
+
+    editableBlocksSubject = BehaviorSubject<List<String>>() ;
+
+    userSolutionSubject = BehaviorSubject<List<String>>() ;
+
+    pastGameDurationSubject.sink.add(0) ;
   }
 
 
