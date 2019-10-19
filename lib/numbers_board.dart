@@ -340,6 +340,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
     userBloc.setUserSolution(convertedNumbers) ;
     userBloc.setEditableBlocks(convertedEditableList) ;
     userBloc.setIsThereAPreviousGame(true) ;
+    userBloc.setPastGameDuration(currentTime.difference(beginningTime).toString()) ;
     userBloc.saveGameData() ;
   }
 
