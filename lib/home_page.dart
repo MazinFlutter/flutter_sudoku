@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage>{
         ),
         child: StreamBuilder<bool>(
           stream: userBloc.getIsThereAPreviousGame(),
+          initialData: false,
           builder: (context, isThereAGameSnapshot){
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -49,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage>{
                   ],
                 ),
                 isThereAGameSnapshot.data ? AnimatedButton(title: AppLocalizations.of(context, 'Continue'), onPressed: (){
-
+                  moveToGame(3, isThereAGameSnapshot.data);
                 }) : Container(),
                 AnimatedButton(title: AppLocalizations.of(context, 'NewGame'), onPressed: (){
                   if(isThereAGameSnapshot.data){
@@ -68,12 +69,16 @@ class _MyHomePageState extends State<MyHomePage>{
                             child: Text(AppLocalizations.of(context, 'StartANewGame')),
                             onPressed: () {
                               Navigator.of(context).pop();
-                              moveToGame(3);
+                              userBloc.setIsThereAPreviousGame(false);
+                              userBloc.deleteOldGame();
+                              moveToGame(3, isThereAGameSnapshot.data);
                             },
                           ),
                         ],
                       );
                     });
+                  }else{
+                    moveToGame(3, isThereAGameSnapshot.data);
                   }
                 }),
                 AnimatedButton(title: AppLocalizations.of(context, 'HighScores'), onPressed: (){
@@ -104,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage>{
     SystemNavigator.pop();
   }
 
-  moveToGame(int selectedLevel){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => NumbersBoard()));
+  moveToGame(int selectedLevel, bool pastData){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => NumbersBoard(previousDataExist: pastData,)));
   }
 }
