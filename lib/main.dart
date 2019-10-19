@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'app_localizations_delegate.dart';
 import 'bloc_base.dart';
+import 'cupertino_localization_delegate.dart';
 import 'home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'user_data_bloc.dart';
@@ -64,6 +65,7 @@ class _MyAppState extends State<MyApp>{
                     AppLocalizationsDelegate(),
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
+                    CupertinoLocalisationsDelegate(),
                   ],
                   supportedLocales: [
                     const Locale('en', ''), // English
