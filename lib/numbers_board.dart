@@ -38,6 +38,16 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   UserDataBloc userBloc ;
 
+  DateTime beginningTime = DateTime.now();
+
+  DateTime currentTime = DateTime.now();
+
+  String clock = DateTime.now().difference(DateTime.now()).toString().split('.')[0] ;
+
+  double clockFontSize = 18.0 ;
+
+  double clockTextLength  ;
+
   @override
   void initState() {
     boxBoardNumbers = List.generate(9, (i) => List.generate(9, (j) => '' )) ;
@@ -47,6 +57,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
     answerStatus = List.generate(9, (i) => List.generate(9, (i) => true )) ;
     cellControllers = List.generate(9, (i) => List.generate(9, (j) => TextEditingController(text: '') )) ;
     userBloc = BlocProvider.of(context) ;
+    moveClock();
     super.initState();
   }
 
@@ -71,6 +82,20 @@ class _NumbersBoardState extends State<NumbersBoard>{
                   return CircularProgressIndicator();
                 }
               },
+            ),
+            Opacity(
+              opacity: 0.7,
+              child: Container(
+                height: clockFontSize*2,
+                width: clock.length * clockFontSize/ 1.5,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(clockFontSize),
+                ),
+                child: Center(
+                  child: Text(clock, style: TextStyle(fontSize: clockFontSize,),),
+                ),
+              ),
             ),
             AnimatedButton(title: AppLocalizations.of(context, 'CheckSolution'), onPressed: (){
               checkSolution();
@@ -130,7 +155,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   checkSolution(){
 
-    List<List<int>> completeSolution = [[1, 4, 5, 2, 8, 7, 3, 9, 6], [6, 2, 7, 4, 3, 9, 1, 8, 5], [9, 8, 3, 6, 5, 1, 4, 7, 2], [4, 7, 3, 8, 6, 9, 5, 1, 2], [9, 5, 2, 7, 1, 3, 8, 6, 4], [8, 1, 6, 2, 4, 5, 7, 3, 9], [6, 5, 1, 9, 3, 8, 7, 2, 4], [2, 7, 8, 5, 4, 6, 3, 9, 1], [3, 9, 4, 1, 2, 7, 5, 6, 8]];
+    //List<List<int>> completeSolution = [[1, 4, 5, 2, 8, 7, 3, 9, 6], [6, 2, 7, 4, 3, 9, 1, 8, 5], [9, 8, 3, 6, 5, 1, 4, 7, 2], [4, 7, 3, 8, 6, 9, 5, 1, 2], [9, 5, 2, 7, 1, 3, 8, 6, 4], [8, 1, 6, 2, 4, 5, 7, 3, 9], [6, 5, 1, 9, 3, 8, 7, 2, 4], [2, 7, 8, 5, 4, 6, 3, 9, 1], [3, 9, 4, 1, 2, 7, 5, 6, 8]];
 
     print(boxBoardNumbers);
 
@@ -275,4 +300,18 @@ class _NumbersBoardState extends State<NumbersBoard>{
     });
   }
 
-}
+  moveClock() async {
+      Future.delayed( Duration(seconds: 1), (){
+        currentTime = DateTime.now();
+        setState(() {
+          clock = currentTime.difference(beginningTime).toString().split('.')[0] ;
+          //To make Container's width proportional to text length
+          //يقوم هذا السطر بتغيير عرض الـContainer ليكون نسبيا مع عدد الأرقام الظاهرة
+          clockTextLength = clock.length.toDouble() ;
+        });
+        moveClock();
+
+      });
+    }
+
+  }
