@@ -32,7 +32,9 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   List<List<FocusNode>> focusNodes ;
 
-  List<List<bool>> answerStatus ;
+  List<List<bool>> isCorrect ;
+
+  List<List<bool>> isEditable ;
 
   List<List<TextEditingController>> cellControllers ;
 
@@ -54,7 +56,8 @@ class _NumbersBoardState extends State<NumbersBoard>{
     horizontalBoardNumbers = List.generate(9, (i) => List.generate(9, (i) => '' )) ;
     verticalBoardNumbers = List.generate(9, (i) => List.generate(9, (i) => '' )) ;
     focusNodes = List.generate(9, (i) => List.generate(9, (i) => FocusNode() )) ;
-    answerStatus = List.generate(9, (i) => List.generate(9, (i) => true )) ;
+    isCorrect = List.generate(9, (i) => List.generate(9, (i) => true )) ;
+    isEditable = List.generate(9, (i) => List.generate(9, (i) => true )) ;
     cellControllers = List.generate(9, (i) => List.generate(9, (j) => TextEditingController(text: '') )) ;
     userBloc = BlocProvider.of(context) ;
     moveClock();
@@ -114,6 +117,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
     if(numbers.response){
       for(int index = 0 ; index < numbers.squares.length ; index++){
         boxBoardNumbers[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3] = cellControllers[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3].text = numbers.squares[index].value.toString() ;
+        isEditable[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3] = false ;
       }
     }
 
@@ -134,8 +138,8 @@ class _NumbersBoardState extends State<NumbersBoard>{
                       child: Container(
                         width: MediaQuery.of(context).size.width/3,
                         height: MediaQuery.of(context).size.width/3,
-                        decoration: BoxDecoration(border: Border.all( width: innerPadding, color: Colors.lightBlueAccent), color: currentlyChecking ? (answerStatus[i][j] ? Colors.white : Colors.red[300]) : focusNodes[i][j].hasFocus ? Colors.blue[100] : Colors.white ),
-                        child: TextField(controller: cellControllers[i][j], focusNode: focusNodes[i][j], decoration: InputDecoration(isDense: false, border: InputBorder.none),textAlign: TextAlign.center, textAlignVertical: TextAlignVertical.center, enableInteractiveSelection: false,keyboardType: TextInputType.number,showCursor: false,style: TextStyle(fontSize: MediaQuery.of(context).size.width/(6*3), fontWeight: FontWeight.bold),inputFormatters: [LengthLimitingTextInputFormatter(1)], onChanged: (value){
+                        decoration: BoxDecoration(border: Border.all( width: innerPadding, color: Colors.lightBlueAccent), color: currentlyChecking ? (isCorrect[i][j] ? (isEditable[i][j] ? Colors.white : Colors.grey[300]) : Colors.red[300]) : focusNodes[i][j].hasFocus ? Colors.blue[100] : isEditable[i][j] ? Colors.white : Colors.grey[300] ),
+                        child: TextField(enabled: isEditable[i][j], controller: cellControllers[i][j], focusNode: focusNodes[i][j], decoration: InputDecoration(isDense: false, border: InputBorder.none),textAlign: TextAlign.center, textAlignVertical: TextAlignVertical.center, enableInteractiveSelection: false,keyboardType: TextInputType.number,showCursor: false,style: TextStyle(fontSize: MediaQuery.of(context).size.width/(6*3), fontWeight: FontWeight.bold),inputFormatters: [LengthLimitingTextInputFormatter(1)], onChanged: (value){
 
                           boxBoardNumbers[i][j] = cellControllers[i][j].text = !'123456789'.contains(value) ? '': value  ;
                         }, onTap: (){
@@ -171,7 +175,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
     bool squaresComplete = true ;
 
-    answerStatus = List.generate(9, (i) => List.generate(9, (i) => true )) ;
+    isCorrect = List.generate(9, (i) => List.generate(9, (i) => true )) ;
 
 
         for(int i = 0 ; i < 9 ; i++){
@@ -205,12 +209,12 @@ class _NumbersBoardState extends State<NumbersBoard>{
             if(((boxBoardNumbers[i].indexOf('${j + 1}') != boxBoardNumbers[i].lastIndexOf('${j + 1}')) && boxBoardNumbers[i].indexOf('${j + 1}') != -1) || boxBoardNumbers[i][j] == ''){
               if(boxBoardNumbers[i][j] == ''){
                 print('The ${j + 1}th cell of the ${i + 1}th box is empty !');
-                answerStatus[i][j] = squaresComplete = false ;
+                isCorrect[i][j] = squaresComplete = false ;
               }else{
                 print('${j + 1} is not unique in the ${i + 1}th box');
                 print('first index of ${j + 1 } is : ${boxBoardNumbers[i].indexOf('${j + 1}')}');
                 print('last index of ${j + 1 } is : ${boxBoardNumbers[i].lastIndexOf('${j + 1}')}');
-                answerStatus[i][boxBoardNumbers[i].indexOf('${j + 1}')] = answerStatus[i][boxBoardNumbers[i].lastIndexOf('${j + 1}')] = squaresComplete = false ;
+                isCorrect[i][boxBoardNumbers[i].indexOf('${j + 1}')] = isCorrect[i][boxBoardNumbers[i].lastIndexOf('${j + 1}')] = squaresComplete = false ;
               }
             }
 
@@ -223,7 +227,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
                 for(int a = 0 ; a <  3 ; a++){
                   for(int b = 0 ; b < 3 ; b++){
                     if(boxBoardNumbers[a + 3*(i~/3)][b + 3*(i%3)] == ''){
-                      answerStatus[a + 3*(i~/3)][b + 3*(i%3)] = solvedHorizontally = false;
+                      isCorrect[a + 3*(i~/3)][b + 3*(i%3)] = solvedHorizontally = false;
                     }
                   }
                 }
@@ -234,7 +238,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
                 for(int a = 0 ; a <  3 ; a++){
                   for(int b = 0 ; b < 3 ; b++){
                     if(boxBoardNumbers[a + 3*(i~/3)][b + 3*(i%3)] == '${j + 1}'){
-                      answerStatus[a + 3*(i~/3)][b + 3*(i%3)] = solvedHorizontally = false;
+                      isCorrect[a + 3*(i~/3)][b + 3*(i%3)] = solvedHorizontally = false;
                     }
                   }
                 }
@@ -250,7 +254,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
                 for(int x = 0 ; x < 9 ; x = x + 3){
                   for(int y = 0 ; y < 9 ; y = y + 3){
                     if(boxBoardNumbers[x + (i~/3)][y + (i%3)] == ''){
-                      answerStatus[x + (i~/3)][y + (i%3)] = solvedVertically = false;
+                      isCorrect[x + (i~/3)][y + (i%3)] = solvedVertically = false;
                     }
                   }
                 }
@@ -261,7 +265,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
                 for(int x = 0 ; x < 9 ; x = x + 3){
                   for(int y = 0 ; y < 9 ; y = y + 3){
                     if(boxBoardNumbers[x + (i~/3)][y + (i%3)] == '${j + 1}'){
-                      answerStatus[x + (i~/3)][y + (i%3)] = solvedVertically = false;
+                      isCorrect[x + (i~/3)][y + (i%3)] = solvedVertically = false;
                     }
                   }
                 }
