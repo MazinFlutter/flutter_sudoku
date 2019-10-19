@@ -113,6 +113,8 @@ class UserDataBloc extends BlocBase{
 
         setLocaleChoice(profilePreferences.getString('Locale') != null ? profilePreferences.getString('Locale') : 'en');
 
+        setIsThereAPreviousGame(false);
+
         //Load unfinished solution from storage if there is a one
         //تحميل اللعبة السابقة من وحدة التخزين إذا كانت هنالك واحدة
 

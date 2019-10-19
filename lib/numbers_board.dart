@@ -22,6 +22,8 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   bool currentlyChecking = false ;
 
+  bool gameClosing = false ;
+
   List<List<String>> boxBoardNumbers ;
 
   List<List<int>> modelAnswer ;
@@ -305,17 +307,48 @@ class _NumbersBoardState extends State<NumbersBoard>{
   }
 
   moveClock() async {
-      Future.delayed( Duration(seconds: 1), (){
-        currentTime = DateTime.now();
+
+    Future.delayed( Duration(seconds: 1), (){
+      currentTime = DateTime.now();
+      if(!gameClosing){
         setState(() {
           clock = currentTime.difference(beginningTime).toString().split('.')[0] ;
           //To make Container's width proportional to text length
           //يقوم هذا السطر بتغيير عرض الـContainer ليكون نسبيا مع عدد الأرقام الظاهرة
           clockTextLength = clock.length.toDouble() ;
         });
-        moveClock();
+      }
 
-      });
+      moveClock();
+
+    });
+  }
+
+  void saveUnfinishedSolution(List<List<String>> numbers, List<List<bool>> areEditableList, UserDataBloc userBloc){
+
+    List<String> convertedNumbers = <String>[] ;
+
+    List<String> convertedEditableList = <String>[] ;
+
+    for(int i = 0 ; i < 9 ; i++){
+      for(int j = 0 ; j < 9 ; j++){
+        convertedNumbers.add(numbers[i][j]);
+        convertedEditableList.add(areEditableList[i][j].toString());
+      }
     }
 
+    userBloc.setUserSolution(convertedNumbers) ;
+    userBloc.setEditableBlocks(convertedEditableList) ;
+    userBloc.setIsThereAPreviousGame(true) ;
+    userBloc.saveGameData() ;
   }
+
+    @override
+  void dispose() {
+    gameClosing = true ;
+    saveUnfinishedSolution(boxBoardNumbers, isEditable, userBloc) ;
+    print('Game disposed !') ;
+    super.dispose() ;
+  }
+
+}
