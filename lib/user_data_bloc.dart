@@ -31,12 +31,16 @@ class UserDataBloc extends BlocBase{
 
   var isThereAPreviousGame = BehaviorSubject<bool>() ;
 
+  var pastGameDurationSubject = BehaviorSubject<String>() ;
+
 
   Stream<MaterialColor> getColor() => colorChoiceSubject.stream.distinct().transform(transformColorChoice) ;
 
   Stream<Locale> getLocale() => localeChoiceSubject.stream.distinct().transform(transformLocaleChoice) ;
 
   Stream<List<List<bool>>> getEditableBlocks() => editableBlocksSubject.stream.distinct().transform(transformEditableBlocksList) ;
+
+  Stream<String> getPastGameDuration() => pastGameDurationSubject.stream.distinct() ;
 
   Stream<List<List<String>>> getUserSolution() => userSolutionSubject.stream.distinct().transform(transformUserSolutionsList) ;
 
@@ -53,6 +57,10 @@ class UserDataBloc extends BlocBase{
 
   void setEditableBlocks (List<String> editableBlocksList){
     editableBlocksSubject.sink.add(editableBlocksList);
+  }
+
+  void setPastGameDuration (String duration){
+    pastGameDurationSubject.sink.add(duration);
   }
 
   void setUserSolution (List<String> userSolutionList){
@@ -124,7 +132,10 @@ class UserDataBloc extends BlocBase{
 
           setEditableBlocks(profilePreferences.getStringList('editableBlocksList') != null ? profilePreferences.getStringList('editableBlocksList') : <String>[]);
 
+          setPastGameDuration(profilePreferences.getString('gameDuration') != null ? profilePreferences.getString('gameDuration') : DateTime.now().toString());
+
           setUserSolution(profilePreferences.getStringList('numbersList') != null ? profilePreferences.getStringList('numberList') : <String>[]);
+
 
         }
     }
@@ -229,6 +240,8 @@ class UserDataBloc extends BlocBase{
 
     localeChoiceSubject.close() ;
 
+    pastGameDurationSubject.close() ;
+
     userSolutionSubject.close() ;
 
   }
@@ -242,6 +255,7 @@ class UserDataBloc extends BlocBase{
     profilePreferences.setStringList('numbersList', userSolutionSubject.stream.value) ;
     profilePreferences.setStringList('editableBlocksList', editableBlocksSubject.stream.value) ;
     profilePreferences.setBool('previousGameExist', isThereAPreviousGame.stream.value) ;
+    profilePreferences.setString('gameDuration', pastGameDurationSubject.stream.value) ;
   }
 
 
