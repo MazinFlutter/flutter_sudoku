@@ -59,7 +59,7 @@ class AppLocalizations {
       'Hard' : 'صعب',
       //Warning Dialog
       'UnfinishedGame' : 'لعبة سابقة',
-      'UnfinishedGameMessage' : 'بداية لعبة جديدة سيمحو اللعبة السابقة، متابعة ؟ ',
+      'UnfinishedGameMessage' : 'بدء لعبة جديدة سيمحو اللعبة السابقة، متابعة ؟ ',
       'Cancel' : 'الغاء',
       'StartANewGame' : 'بداية لعبة جديدة',
     }
