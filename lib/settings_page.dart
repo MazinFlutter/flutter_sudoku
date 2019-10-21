@@ -20,7 +20,12 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context, 'SettingsPageTitle')),
       ),
-      body: SettingsPageContent(),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage('assets/images/numbers_3.jpg'), fit: BoxFit.cover),
+        ),
+        child: SettingsPageContent(),
+      )
     );
   }
 }
