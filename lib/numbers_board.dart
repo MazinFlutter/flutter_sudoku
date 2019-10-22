@@ -82,16 +82,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            StreamBuilder<BoardNumbers>(
-              stream: userBloc.boardNumbersSubject,
-              builder: (context, initialNumbersSnapshot){
-                if(initialNumbersSnapshot.hasData){
-                  return drawBoard(0.5, initialNumbersSnapshot.data, widget.previousDataExist);
-                }else{
-                  return CircularProgressIndicator();
-                }
-              },
-            ),
+            drawBoard(0.5, widget.previousDataExist),
             Opacity(
               opacity: 0.7,
               child: Container(
