@@ -330,7 +330,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
   moveClock() async {
 
     Future.delayed( Duration(seconds: 1), (){
-      currentTime = widget.previousDataExist ? DateTime.now().add(Duration(seconds: userBloc.pastGameDuration)) : DateTime.now() ;
+      currentTime = DateTime.now().add(Duration(seconds: pastSeconds)) ;
       if(!gameClosing){
         setState(() {
           clock = currentTime.difference(beginningTime).toString().split('.')[0] ;
@@ -372,5 +372,6 @@ class _NumbersBoardState extends State<NumbersBoard>{
     print('Game disposed !') ;
     super.dispose() ;
   }
+
 
 }
