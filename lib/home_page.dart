@@ -71,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage>{
                               Navigator.of(context).pop();
                               userBloc.setIsThereAPreviousGame(false);
                               userBloc.deleteOldGame();
+                              userBloc.startANewGame();
                               moveToGame(3, isThereAGameSnapshot.data);
                             },
                           ),
@@ -78,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage>{
                       );
                     });
                   }else{
+                    userBloc.startANewGame();
                     moveToGame(3, isThereAGameSnapshot.data);
                   }
                 }),
