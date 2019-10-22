@@ -5,7 +5,6 @@ import 'package:flutter_sudoku/user_data_bloc.dart';
 import 'animated_button.dart';
 import 'app_localizations.dart';
 import 'bloc_base.dart';
-import 'board_numbers.dart';
 
 class NumbersBoard extends StatefulWidget {
 
