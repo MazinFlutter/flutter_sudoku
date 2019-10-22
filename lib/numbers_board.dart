@@ -56,12 +56,14 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   @override
   void initState() {
-    boxBoardNumbers = List.generate(9, (i) => List.generate(9, (j) => '' )) ;
-    horizontalBoardNumbers = List.generate(9, (i) => List.generate(9, (i) => '' )) ;
-    verticalBoardNumbers = List.generate(9, (i) => List.generate(9, (i) => '' )) ;
+    emptyStringList = List.generate(9, (i) => List.generate(9, (j) => '' )) ;
+    emptyBoolList = List.generate(9, (i) => List.generate(9, (j) => true )) ;
+    boxBoardNumbers = emptyStringList ;
+    horizontalBoardNumbers = emptyStringList ;
+    verticalBoardNumbers = emptyStringList ;
     focusNodes = List.generate(9, (i) => List.generate(9, (i) => FocusNode() )) ;
-    isCorrect = List.generate(9, (i) => List.generate(9, (i) => true )) ;
-    isEditable = List.generate(9, (i) => List.generate(9, (i) => true )) ;
+    isCorrect = emptyBoolList ;
+    isEditable = emptyBoolList ;
     cellControllers = List.generate(9, (i) => List.generate(9, (j) => TextEditingController(text: '') )) ;
     userBloc = BlocProvider.of(context) ;
     moveClock();
