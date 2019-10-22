@@ -102,7 +102,16 @@ class _NumbersBoardState extends State<NumbersBoard>{
                   borderRadius: BorderRadius.circular(clockFontSize),
                 ),
                 child: Center(
-                  child: Text(clock, style: TextStyle(fontSize: clockFontSize,),),
+                  child: StreamBuilder(
+                    stream: userBloc.getPastGameDuration(),
+                    initialData: 0,
+                    builder: (context, pastDurationSnapshot){
+                      if(!clockInitialized){
+                        initiateClock(pastDurationSnapshot.data) ;
+                      }
+                      return Text(clock, style: TextStyle(fontSize: clockFontSize,),) ;
+                    },
+                  ),
                 ),
               ),
             ),
