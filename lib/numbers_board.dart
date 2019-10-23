@@ -53,6 +53,18 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   double clockTextLength  ;
 
+  //To prevent multiple population of the board.
+  //لمنع ملء المربعات بالأرقام أكثر من مرة
+  bool boardPopulated = false ;
+
+  bool clockInitialized = false ;
+
+  int pastSeconds = 0 ;
+
+  List<List<String>> emptyStringList ;
+
+  List<List<bool>> emptyBoolList ;
+
   @override
   void initState() {
     emptyStringList = List.generate(9, (i) => List.generate(9, (j) => '' )) ;
