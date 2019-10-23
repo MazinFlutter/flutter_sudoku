@@ -8,10 +8,7 @@ import 'bloc_base.dart';
 
 class NumbersBoard extends StatefulWidget {
 
-  @required
-  final bool previousDataExist ;
-
-  NumbersBoard({Key key, this.previousDataExist}) : super(key: key);
+  NumbersBoard({Key key}) : super(key: key);
 
   @override
   _NumbersBoardState createState() => _NumbersBoardState();
