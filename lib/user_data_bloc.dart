@@ -27,14 +27,6 @@ class UserDataBloc extends BlocBase{
 
   var editableBlocksSubject = BehaviorSubject<List<String>>() ;
 
-  List<List<bool>> editableBlocks  = List.generate(9, (i) => List.generate(9, (j) => true )) ;
-
-  List<List<String>> userSolution = List.generate(9, (i) => List.generate(9, (z) => '' )) ;
-
-  bool previousGameAvailable ;
-
-  int pastGameDuration  = 0 ;
-
   var userSolutionSubject = BehaviorSubject<List<String>>() ;
 
   var isThereAPreviousGame = BehaviorSubject<bool>() ;
@@ -149,7 +141,6 @@ class UserDataBloc extends BlocBase{
 
     var parsed = json.decode(responseBody);
 
-
     return BoardNumbers.fromJson(parsed);
   }
 
@@ -188,15 +179,6 @@ class UserDataBloc extends BlocBase{
           setPastGameDuration(profilePreferences.getInt('gameDuration') != null ? profilePreferences.getInt('gameDuration') : DateTime.now().difference(DateTime.now()).inSeconds);
 
           setUserSolution(profilePreferences.getStringList('numbersList') != null ? profilePreferences.getStringList('numbersList') : <String>[]);
-
-          previousGameAvailable = isThereAPreviousGame.stream.value ;
-
-          pastGameDuration = pastGameDurationSubject.stream.value ;
-
-          for(int i = 0 ; i < 9 ; i++){
-            editableBlocks[i] = List.generate(9, (j) => editableBlocksSubject.stream.value[(i * 9) + j] == 'true').toList() ;
-            userSolution[i] = List.generate(9, (z) => userSolutionSubject.stream.value[(i * 9) + z] ).toList() ;
-          }
 
         }
     }
