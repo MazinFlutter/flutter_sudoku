@@ -112,6 +112,6 @@ class _MyHomePageState extends State<MyHomePage>{
   }
 
   moveToGame(int selectedLevel, bool pastData){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => NumbersBoard(previousDataExist: pastData,)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => NumbersBoard()));
   }
 }
