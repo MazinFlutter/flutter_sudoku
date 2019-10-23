@@ -45,6 +45,8 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   DateTime currentTime = DateTime.now();
 
+  //to show time spent solving the board, excluding milliseconds.
+  //لعرض الزمن الذي تم قضاؤه في حل اللعبة، بدون اظهار الأجزاء من الثانية
   String clock = DateTime.now().difference(DateTime.now()).toString().split('.')[0] ;
 
   double clockFontSize = 18.0 ;
@@ -79,7 +81,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            drawBoard(0.5, widget.previousDataExist),
+            drawBoard(0.5),
             Opacity(
               opacity: 0.7,
               child: Container(
@@ -113,7 +115,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
     );
   }
 
-  Widget drawBoard(double innerPadding, BoardNumbers numbers, bool previousGameExist){
+  Widget drawBoard(double innerPadding){
 
     double outerPadding = innerPadding * 6 ;
 
@@ -122,56 +124,83 @@ class _NumbersBoardState extends State<NumbersBoard>{
       initialData: false,
       builder: (context, isThereAPreviousGameSnapshot){
         if(isThereAPreviousGameSnapshot.data){
-          boxBoardNumbers = userBloc.userSolution ;
-          isEditable = userBloc.editableBlocks ;
           for(int i = 0 ; i < 9 ; i++){
             for(int j = 0 ; j < 9 ; j++){
               cellControllers[i][j].text = boxBoardNumbers[i][j] ;
             }
           }
-        }else{
-          if(numbers.response){
-            for(int index = 0 ; index < numbers.squares.length ; index++){
-              boxBoardNumbers[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3] = cellControllers[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3].text = numbers.squares[index].value.toString() ;
-              isEditable[(numbers.squares[index].x~/3)*3 + (numbers.squares[index].y~/3)][(numbers.squares[index].y%3) + (numbers.squares[index].x%3)*3] = false ;
-            }
-          }
         }
-        return Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width + 6*outerPadding ,
-          padding: EdgeInsets.all(3.0),
-          child: GridView.count(
-              crossAxisCount: 3,
-              children: List.generate(9, (i){
-                return GridView.count(
-                  crossAxisCount: 3,
-                  padding: EdgeInsets.all(outerPadding),
-                  children: List.generate(9, (j) {
-                    return Center(
-                      child: Opacity(
-                        opacity: 0.8,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width/3,
-                          height: MediaQuery.of(context).size.width/3,
-                          decoration: BoxDecoration(border: Border.all( width: innerPadding, color: Colors.lightBlueAccent), color: currentlyChecking && isEditable[i][j] ? (isCorrect[i][j] ? (isEditable[i][j] ? Colors.white : Colors.grey[300]) : Colors.red[300]) : focusNodes[i][j].hasFocus ? Colors.blue[100] : isEditable[i][j] ? Colors.white : Colors.grey[300] ),
-                          child: TextField(enabled: isEditable[i][j], controller: cellControllers[i][j], focusNode: focusNodes[i][j], decoration: InputDecoration(isDense: false, border: InputBorder.none),textAlign: TextAlign.center, textAlignVertical: TextAlignVertical.center, enableInteractiveSelection: false,keyboardType: TextInputType.number,showCursor: false,style: TextStyle(fontSize: MediaQuery.of(context).size.width/(6*3), fontWeight: FontWeight.bold),inputFormatters: [LengthLimitingTextInputFormatter(1)], onChanged: (value){
+        return StreamBuilder<List<List<String>>>(
+          stream: userBloc.getUserSolution(),
+          initialData: emptyStringList,
+          builder: (context, userSolutionSnapshot){
+            return StreamBuilder<List<List<bool>>>(
+              stream: userBloc.getEditableBlocks(),
+              initialData: emptyBoolList,
+              builder: (context, editableBlocksSnapshot){
+                if(!boardPopulated && userSolutionSnapshot.hasData){
+                  initiateBoard(userSolutionSnapshot.data, editableBlocksSnapshot.data) ;
+                }
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width + 6*outerPadding ,
+                  padding: EdgeInsets.all(3.0),
+                  child: GridView.count(
+                      crossAxisCount: 3,
+                      children: List.generate(9, (i){
+                        return GridView.count(
+                          crossAxisCount: 3,
+                          padding: EdgeInsets.all(outerPadding),
+                          children: List.generate(9, (j) {
+                            return Center(
+                              child: Opacity(
+                                opacity: 0.8,
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width/3,
+                                  height: MediaQuery.of(context).size.width/3,
+                                  decoration: BoxDecoration(border: Border.all( width: innerPadding, color: Colors.lightBlueAccent), color: currentlyChecking && isEditable[i][j] ? (isCorrect[i][j] ? (isEditable[i][j] ? Colors.white : Colors.grey[300]) : Colors.red[300]) : focusNodes[i][j].hasFocus ? Colors.blue[100] : isEditable[i][j] ? Colors.white : Colors.grey[400] ),
+                                  child: isEditable[i][j] ? TextField(controller: cellControllers[i][j], focusNode: focusNodes[i][j], decoration: InputDecoration(isDense: false, border: InputBorder.none),textAlign: TextAlign.center, textAlignVertical: TextAlignVertical.center, enableInteractiveSelection: false,keyboardType: TextInputType.number,showCursor: false,style: TextStyle(fontSize: MediaQuery.of(context).size.width/(6*3), fontWeight: FontWeight.bold),inputFormatters: [LengthLimitingTextInputFormatter(1)], onChanged: (value){
+                                    boxBoardNumbers[i][j] = cellControllers[i][j].text = !'123456789'.contains(value) ? '': value  ;
+                                  }, onTap: (){
+                                    setState(() {
 
-                            boxBoardNumbers[i][j] = cellControllers[i][j].text = !'123456789'.contains(value) ? '': value  ;
-                          }, onTap: (){
-                            setState(() {
-
-                            });
+                                    });
+                                  }) : Center(
+                                    child: Text(boxBoardNumbers[i][j], style: TextStyle(fontSize: MediaQuery.of(context).size.width/(6*3), fontWeight: FontWeight.bold),),
+                                  ),
+                                ),
+                              ), );
                           }),
-                        ),
-                      ), );
-                  }),
+                        );
+                      })
+                  ),
                 );
-              })
-          ),
+              },
+            );
+
+          },
         );
       },
     );
+  }
+
+  void initiateClock( int receivedDuration){
+    if(receivedDuration != 0){
+      print('received time is $receivedDuration');
+      pastSeconds = receivedDuration;
+      clockInitialized = true ;
+    }
+  }
+  
+  void initiateBoard( List<List<String>> receivedNumbers, List<List<bool>> receivedEditables){
+    if(receivedNumbers.toString().compareTo(emptyStringList.toString()) != 0){
+      boxBoardNumbers = receivedNumbers ;
+      boardPopulated = true ;
+    }
+    if(receivedEditables.toString().compareTo(emptyBoolList.toString()) != 0){
+      isEditable = receivedEditables ;
+      boardPopulated = true ;
+    }
   }
 
 
@@ -180,8 +209,6 @@ class _NumbersBoardState extends State<NumbersBoard>{
   checkSolution(){
 
     //List<List<int>> completeSolution = [[1, 4, 5, 2, 8, 7, 3, 9, 6], [6, 2, 7, 4, 3, 9, 1, 8, 5], [9, 8, 3, 6, 5, 1, 4, 7, 2], [4, 7, 3, 8, 6, 9, 5, 1, 2], [9, 5, 2, 7, 1, 3, 8, 6, 4], [8, 1, 6, 2, 4, 5, 7, 3, 9], [6, 5, 1, 9, 3, 8, 7, 2, 4], [2, 7, 8, 5, 4, 6, 3, 9, 1], [3, 9, 4, 1, 2, 7, 5, 6, 8]];
-
-    print(boxBoardNumbers);
 
     List<String> horizontalRow = <String>[];
 
@@ -195,7 +222,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
     bool squaresComplete = true ;
 
-    isCorrect = List.generate(9, (i) => List.generate(9, (i) => true )) ;
+    isCorrect = List.generate(9, (i) => List.generate(9, (j) => true )) ;
 
 
         for(int i = 0 ; i < 9 ; i++){
