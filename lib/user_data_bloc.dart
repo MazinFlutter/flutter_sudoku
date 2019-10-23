@@ -232,42 +232,18 @@ class UserDataBloc extends BlocBase{
   final transformEditableBlocksList =
   StreamTransformer<List<String>, List<List<bool>>>.fromHandlers(handleData: (storedEditableList, sink) {
 
-    List<List<bool>> convertedEditableBlocksList ;
-
-    if(storedEditableList.length == 81){
-
-      for(int i = 0 ; i < 9 ; i++){
-        convertedEditableBlocksList[i] = List.generate(9, (j) => storedEditableList[(i * 9) + j] == 'true').toList() ;
-      }
-
-      sink.add(convertedEditableBlocksList) ;
-
-    }else{
-
-      sink.addError('Invalid Editable blocks List');
-
-    }
+    //loop inside StreamTransformer wasn't working, so replaced with List.generate() in sink.add().
+    //حلقة for لا تعمل داخل StreamTransformer، لذلك استبدلت بـList.generate
+    sink.add(List.generate(9, (i) => List.generate(9, (j) => storedEditableList[(i * 9) + j] == 'true' )) );
 
   });
 
   final transformUserSolutionsList =
   StreamTransformer<List<String>, List<List<String>>>.fromHandlers(handleData: (storedSolutionList, sink) {
 
-    List<List<String>> convertedSolutionList ;
-
-    if(storedSolutionList.length == 81){
-
-      for(int i = 0 ; i < 9 ; i++){
-        convertedSolutionList[i] = List.generate(9, (j) => storedSolutionList[(i * 9) + j]).toList() ;
-      }
-
-      sink.add(convertedSolutionList) ;
-
-    }else{
-
-      sink.addError('Invalid Solutions List');
-
-    }
+    //loop inside StreamTransformer wasn't working, so replaced with List.generate() in sink.add().
+    //حلقة for لا تعمل داخل StreamTransformer، لذلك استبدلت بـList.generate
+    sink.add(List.generate(9, (i) => List.generate(9, (j) => storedSolutionList[(i * 9) + j] )) );
 
   });
 
