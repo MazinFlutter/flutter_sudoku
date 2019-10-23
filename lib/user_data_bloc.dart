@@ -146,9 +146,9 @@ class UserDataBloc extends BlocBase{
 
     profilePreferences = await SharedPreferences.getInstance() ;
 
-    BoardNumbers initialNumbers = await fetchSudoku(Client()) ;
+    //BoardNumbers initialNumbers = await fetchSudoku(Client()) ;
 
-    boardNumbersSubject.sink.add(initialNumbers) ;
+    //boardNumbersSubject.sink.add(initialNumbers) ;
 
   }
 
