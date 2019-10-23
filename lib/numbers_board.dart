@@ -94,33 +94,50 @@ class _NumbersBoardState extends State<NumbersBoard>{
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             drawBoard(0.5),
-            Opacity(
-              opacity: 0.7,
-              child: Container(
-                height: clockFontSize*2,
-                width: clock.length * clockFontSize/ 1.5,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(clockFontSize),
-                ),
-                child: Center(
-                  child: StreamBuilder(
-                    stream: userBloc.getPastGameDuration(),
-                    initialData: 0,
-                    builder: (context, pastDurationSnapshot){
-                      if(!clockInitialized){
-                        initiateClock(pastDurationSnapshot.data) ;
-                      }
-                      return Text(clock, style: TextStyle(fontSize: clockFontSize,),) ;
-                    },
+            Expanded(
+              flex: 4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Opacity(
+                    opacity: 0.8,
+                    child: Container(
+                      height: clockFontSize*2,
+                      width: clock.length * clockFontSize,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(clockFontSize),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Icon(Icons.access_alarm,color: Colors.white, ),
+                          Center(
+                            child: StreamBuilder(
+                              stream: userBloc.getPastGameDuration(),
+                              initialData: 0,
+                              builder: (context, pastDurationSnapshot){
+                                if(!clockInitialized){
+                                  initiateClock(pastDurationSnapshot.data) ;
+                                }
+                                return Text(clock, style: TextStyle(fontSize: clockFontSize, color: Colors.white, fontWeight: FontWeight.bold),) ;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  AnimatedButton(title: AppLocalizations.of(context, 'CheckSolution'), onPressed: (){
+                    checkSolution();
+                  }),
+                ],
               ),
             ),
-            AnimatedButton(title: AppLocalizations.of(context, 'CheckSolution'), onPressed: (){
-              checkSolution();
-            }),
-            Container(),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
           ],
         ),
       ),
