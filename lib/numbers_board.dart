@@ -172,8 +172,9 @@ class _NumbersBoardState extends State<NumbersBoard>{
                 }
                 return Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width + 6*outerPadding ,
-                  padding: EdgeInsets.all(3.0),
+                  height: MediaQuery.of(context).size.width + 12*outerPadding ,
+                  padding: EdgeInsets.all(outerPadding),
+                  //decoration: BoxDecoration(border: Border.all(width: 2.0, color: Colors.black)),
                   child: GridView.count(
                       crossAxisCount: 3,
                       children: List.generate(9, (i){
