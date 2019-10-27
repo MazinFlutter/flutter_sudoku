@@ -86,61 +86,38 @@ class _SettingsPageContentState extends State<SettingsPageContent>{
                     ],
                   )
               ),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(AppLocalizations.of(context, 'Easy'), style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
-                            StreamBuilder<Locale>(
-                              stream: userBloc.getLocale(),
-                              initialData: Locale('en',''),
-                              builder: (BuildContext context, localeSnapshot){
-                                return Radio(value: 0, groupValue: localeSnapshot.data.languageCode == 'en' ? 0 : 1, onChanged: handleRadioLocaleChange, activeColor: Colors.blue,);
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(AppLocalizations.of(context, 'Medium'), style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
-                            StreamBuilder<Locale>(
-                              stream: userBloc.getLocale(),
-                              initialData: Locale('en',''),
-                              builder: (BuildContext context, localeSnapshot){
-                                return Radio(value: 1, groupValue: localeSnapshot.data.languageCode == 'en' ? 0 : 1, onChanged: handleRadioLocaleChange, activeColor: Colors.blue,);
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(AppLocalizations.of(context, 'Hard'), style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
-                            StreamBuilder<Locale>(
-                              stream: userBloc.getLocale(),
-                              initialData: Locale('en',''),
-                              builder: (BuildContext context, localeSnapshot){
-                                return Radio(value: 1, groupValue: localeSnapshot.data.languageCode == 'en' ? 0 : 1, onChanged: handleRadioLocaleChange, activeColor: Colors.blue,);
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              CupertinoSegmentedControl(
+                groupValue: levelSelection,
+                unselectedColor: Colors.transparent,
+                children: <int, Widget>{
+                  0 : FlatButton(
+                    child: Text(AppLocalizations.of(context, 'Easy')),
+                    onPressed: (){
+                      setState(() {
+                        levelSelection = 0 ;
+                      });
+                    },
+                  ),
+                  1 : FlatButton(
+                    child: Text(AppLocalizations.of(context, 'Medium')),
+                    onPressed: (){
+                      setState(() {
+                        levelSelection = 1 ;
+                      });
+                    },
+                  ),
+                  2 : FlatButton(
+                    child: Text(AppLocalizations.of(context, 'Hard')),
+                    onPressed: (){
+                      setState(() {
+                        levelSelection = 2 ;
+                      });
+                    },
+                  ),
+                },
+                onValueChanged: (int value){
+                },
+              )
             ],
           ),
         ),
