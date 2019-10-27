@@ -15,6 +15,8 @@ class SettingsPageContent extends StatefulWidget {
 class _SettingsPageContentState extends State<SettingsPageContent>{
   UserDataBloc userBloc ;
 
+  int levelSelection = 0 ;
+
 
   @override
   Widget build(BuildContext context) {
