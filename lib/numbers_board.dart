@@ -61,9 +61,14 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   int pastSeconds = 0 ;
 
-  List<List<String>> emptyStringList ;
+  //Values used to highlight current selected block
+  //قيم لإظهار المربع المختار
 
-  List<List<bool>> emptyBoolList ;
+  int selectedRowPosition = -1 ;
+
+  int selectedColumnPosition = -1 ;
+
+  List<List<bool>> isSelected ;
 
   @override
   void initState() {
