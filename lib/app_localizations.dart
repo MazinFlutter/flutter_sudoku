@@ -22,6 +22,9 @@ class AppLocalizations {
       //Game Strings
       'CheckSolution' : 'Check Solution',
       //Settings Page Strings
+      'Appearance': 'Appearance',
+      'Color' : 'Color',
+      'Game' : 'Game',
       'SettingsPageTitle' : 'Settings',
       'LanguagesAndThemes' : 'Languages and Themes',
       'Language' : 'Language',
@@ -49,6 +52,9 @@ class AppLocalizations {
       //Game Strings
       'CheckSolution' : 'تحقق من الحل',
       //Settings Page Strings
+      'Appearance' : 'المظهر',
+      'Color' : 'اللون',
+      'Game' : 'اللعبة',
       'SettingsPageTitle' : 'الضبط',
       'LanguagesAndThemes' : 'اللغات والموضوعات',
       'Language' : 'اللغة',
