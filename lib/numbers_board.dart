@@ -398,6 +398,11 @@ class _NumbersBoardState extends State<NumbersBoard>{
           clockTextLength = clock.length.toDouble() ;
         });
       }
+      //Doing initial check to highlight wrong answers when resuming game
+      //لتوضيح الاجابات الخاطئة عندما يتم متابعة لعبة سابقة
+      if(DateTime.now().difference(beginningTime).inSeconds == 2 && pastSeconds != 0){
+        checkSolution() ;
+      }
 
       moveClock();
 
