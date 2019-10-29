@@ -11,14 +11,14 @@ class AppLocalizations {
 
   static Map<String, Map<String, String>> _localizedValues = {
     'en': {
-      'Title' : 'Sudoku',
+      'Title': 'Sudoku',
       //Main Menu Strings
-      'Continue' : 'Continue',
-      'NewGame' : 'New Game',
-      'HighScores' : 'High Scores',
-      'Settings' : 'Settings',
-      'Instructions' : 'Instructions',
-      'Exit' : 'Exit',
+      'Continue': 'Continue',
+      'NewGame': 'New Game',
+      'HighScores': 'High Scores',
+      'Settings': 'Settings',
+      'Instructions': 'Instructions',
+      'Exit': 'Exit',
       //Game Strings
       'CheckSolution' : 'Check Solution',
       //Settings Page Strings
