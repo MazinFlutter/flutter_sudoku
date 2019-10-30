@@ -392,7 +392,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
       currentTime = DateTime.now().add(Duration(seconds: pastSeconds)) ;
       if(!gameClosing){
         setState(() {
-          clock = currentTime.difference(beginningTime).toString().split('.')[0] ;
+          clock = currentTime.difference(beginningTime).abs().toString().split('.')[0] ;
           //To make Container's width proportional to text length
           //يقوم هذا السطر بتغيير عرض الـContainer ليكون نسبيا مع عدد الأرقام الظاهرة
           clockTextLength = clock.length.toDouble() ;
