@@ -45,7 +45,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   //to show time spent solving the board, excluding milliseconds.
   //لعرض الزمن الذي تم قضاؤه في حل اللعبة، بدون اظهار الأجزاء من الثانية
-  String clock = DateTime.now().difference(DateTime.now()).toString().split('.')[0] ;
+  String clock = DateTime.now().difference(DateTime.now()).abs().toString().split('.')[0] ;
 
   double clockFontSize = 18.0 ;
 
