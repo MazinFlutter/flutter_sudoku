@@ -72,14 +72,13 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
   @override
   void initState() {
-    emptyStringList = List.generate(9, (i) => List.generate(9, (j) => '' )) ;
-    emptyBoolList = List.generate(9, (i) => List.generate(9, (j) => true )) ;
-    boxBoardNumbers = emptyStringList ;
-    horizontalBoardNumbers = emptyStringList ;
-    verticalBoardNumbers = emptyStringList ;
+    boxBoardNumbers = List.generate(9, (i) => List.generate(9, (j) => '' )) ;
+    horizontalBoardNumbers = List.generate(9, (i) => List.generate(9, (j) => '' )) ;
+    verticalBoardNumbers = List.generate(9, (i) => List.generate(9, (j) => '' )) ;
     focusNodes = List.generate(9, (i) => List.generate(9, (i) => FocusNode() )) ;
-    isCorrect = emptyBoolList ;
-    isEditable = emptyBoolList ;
+    isCorrect = List.generate(9, (i) => List.generate(9, (j) => true )) ;
+    isEditable = List.generate(9, (i) => List.generate(9, (j) => true )) ;
+    isSelected = List.generate(9, (i) => List.generate(9, (j) => false )) ;
     cellControllers = List.generate(9, (i) => List.generate(9, (j) => TextEditingController(text: '') )) ;
     userBloc = BlocProvider.of(context) ;
     moveClock();
@@ -166,11 +165,11 @@ class _NumbersBoardState extends State<NumbersBoard>{
         }
         return StreamBuilder<List<List<String>>>(
           stream: userBloc.getUserSolution(),
-          initialData: emptyStringList,
+          initialData: List.generate(9, (i) => List.generate(9, (j) => '' )),
           builder: (context, userSolutionSnapshot){
             return StreamBuilder<List<List<bool>>>(
               stream: userBloc.getEditableBlocks(),
-              initialData: emptyBoolList,
+              initialData: List.generate(9, (i) => List.generate(9, (j) => true )),
               builder: (context, editableBlocksSnapshot){
                 if(!boardPopulated && userSolutionSnapshot.hasData){
                   initiateBoard(userSolutionSnapshot.data, editableBlocksSnapshot.data) ;
