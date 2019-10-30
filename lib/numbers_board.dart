@@ -179,6 +179,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
                   //decoration: BoxDecoration(border: Border.all(width: 2.0, color: Colors.black)),
                   child: GridView.count(
                       crossAxisCount: 3,
+                      physics: NeverScrollableScrollPhysics(),
                       children: List.generate(9, (i){
                         return GridView.count(
                           crossAxisCount: 3,
