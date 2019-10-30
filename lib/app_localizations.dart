@@ -20,6 +20,7 @@ class AppLocalizations {
       'Instructions': 'Instructions',
       'Exit': 'Exit',
       //Game Strings
+      'ClearAll' : 'Clear All',
       'CheckSolution' : 'Check Solution',
       //Settings Page Strings
       'Appearance': 'Appearance',
@@ -50,6 +51,7 @@ class AppLocalizations {
       'Instructions' : 'تعليمات',
       'Exit' : 'خروج',
       //Game Strings
+      'ClearAll' : 'مسح الكل',
       'CheckSolution' : 'تحقق من الحل',
       //Settings Page Strings
       'Appearance' : 'المظهر',

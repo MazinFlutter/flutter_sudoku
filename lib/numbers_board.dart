@@ -87,60 +87,144 @@ class _NumbersBoardState extends State<NumbersBoard>{
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.blueGrey,
+      appBar: AppBar(title: Text(AppLocalizations.of(context, pastSeconds == 0 ? 'NewGame' : 'Continue'),),),
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/numbers_5.jpg'), fit: BoxFit.cover),
+          image: DecorationImage(image: AssetImage('assets/images/numbers_4.jpg'), fit: BoxFit.cover),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            drawBoard(0.5),
-            Expanded(
-              flex: 4,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Opacity(
+          //Making game board 10% transparent, so the background image'll have a beautiful effect on it.
+          //يقوم بجعل لوحة الأرقام شفافة بنسبة عشرة بالمئة ، وذلك لتضفي الخلفية تأثيرا جميلا عليها
+          opacity: 0.9,
+          child: Column(
+            children: <Widget>[
+              Row(
                 children: <Widget>[
-                  Opacity(
-                    opacity: 0.8,
-                    child: Container(
-                      height: clockFontSize*2,
-                      width: clock.length * clockFontSize,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(clockFontSize),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Icon(Icons.access_alarm,color: Colors.white, ),
-                          Center(
-                            child: StreamBuilder(
-                              stream: userBloc.getPastGameDuration(),
-                              initialData: 0,
-                              builder: (context, pastDurationSnapshot){
-                                if(!clockInitialized){
-                                  initiateClock(pastDurationSnapshot.data) ;
-                                }
-                                return Text(clock, style: TextStyle(fontSize: clockFontSize, color: Colors.white, fontWeight: FontWeight.bold),) ;
-                              },
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.only(top: 30.0, bottom: 20.0, left: 10.0, right: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            //The timer and pause button.
+                            //المؤقت و زر الايقاف المؤقت
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 2.0, color: Colors.black),
+                                //added (2.0) to the radius value to fully wrap the Container child.
+                                //تمت اضافة (2.0) لنصف قطر الـContainer وذلك ليحيطها الخط تماما
+                                borderRadius: BorderRadius.circular(clockFontSize + 2.0),
+                              ),
+                              //The purpose of the ClipRRect Widget is to make circular clip to Container's nested Widgets.
+                              //الغرض من الـClipRRect هو عمل قطع نصف دائري للـWidgets المدرجة داخل الـContainer
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(clockFontSize),
+                                child: Container(
+                                  height: clockFontSize*2,
+                                  width: clock.length * clockFontSize,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(clockFontSize),
+                                  ),
+                                  child: Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        InkWell(
+                                          onTap: (){
+                                            Navigator.of(context).pop() ;
+                                          },
+                                          child: Container(
+                                            width: clockFontSize*2,
+                                            height: clockFontSize*2,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context).primaryColorDark,
+                                              //borderRadius: BorderRadius.circular(clockFontSize),
+                                            ),
+                                            child: Icon(Icons.pause, color: Colors.white,),
+                                          ),
+                                        ),
+                                        Center(
+                                          child: StreamBuilder(
+                                            stream: userBloc.getPastGameDuration(),
+                                            initialData: 0,
+                                            builder: (context, pastDurationSnapshot){
+                                              if(!clockInitialized){
+                                                initiateClock(pastDurationSnapshot.data) ;
+                                              }
+                                              return Text(clock, style: TextStyle(fontSize: clockFontSize, color: Colors.black, fontWeight: FontWeight.bold),) ;
+                                            },
+                                          ),
+                                        ),
+                                        Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                            InkWell(
+                              onTap: (){
+
+                              },
+                              child: Container(
+                                height: clockFontSize*2,
+                                width: clock.length * clockFontSize,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(clockFontSize),
+                                  border: Border.all(width: 2.0, color: Colors.black),
+                                ),
+                                child: Center(
+                                  child: Text(AppLocalizations.of(context, 'ClearAll'), style: TextStyle(fontSize: clockFontSize, color: Colors.red, fontWeight: FontWeight.bold),),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      //fixing text direction inside the board, so it won't be flipped when changing app language.
+                      //جعل اتجاه النص ثابتا، وذلك لكي لا تعكس اللوحة عند تغيير اللغة من الضبط.
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: drawBoard(0.5),
+                      ),
+                    ],
                   ),
-                  AnimatedButton(title: AppLocalizations.of(context, 'CheckSolution'), onPressed: (){
-                    checkSolution();
-                  }),
                 ],
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(),
-            ),
-          ],
+              //The Number buttons at the button of the Screen used to fill the Soduko board.
+              //أزرار الأرقام في أسفل الشاشة التي تملأ بها خانات السودوكو
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(10, (i) => InkWell(
+                      onTap: (){
+                        if(selectedRowPosition != -1 && selectedColumnPosition != -1){
+                          boxBoardNumbers[selectedRowPosition][selectedColumnPosition] = i != 9 ? (i + 1).toString() : '' ;
+                          checkSolution();
+                        }
+                      },
+                      child: Card(
+                        elevation: 2.0,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width/12.5,
+                          height: MediaQuery.of(context).size.width/12.5,
+                          decoration: BoxDecoration(border: Border.all(width: 2.0, color: Colors.black), borderRadius: BorderRadius.circular(5.0)),
+                          child: Center(
+                              child: i != 9 ? Text((i + 1).toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),) : Icon(Icons.backspace, size: 20.0,)
+                          ),
+                        ),
+                      )
+                  )),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -181,29 +265,58 @@ class _NumbersBoardState extends State<NumbersBoard>{
                       crossAxisCount: 3,
                       physics: NeverScrollableScrollPhysics(),
                       children: List.generate(9, (i){
-                        return GridView.count(
-                          crossAxisCount: 3,
-                          padding: EdgeInsets.all(outerPadding),
-                          children: List.generate(9, (j) {
-                            return Center(
-                              child: Opacity(
-                                opacity: 0.8,
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width/3,
-                                  height: MediaQuery.of(context).size.width/3,
-                                  decoration: BoxDecoration(border: Border.all( width: innerPadding, color: Colors.lightBlueAccent), color: currentlyChecking && isEditable[i][j] ? (isCorrect[i][j] ? (isEditable[i][j] ? Colors.white : Colors.grey[350]) : Colors.red[300]) : focusNodes[i][j].hasFocus ? Colors.blue[100] : isEditable[i][j] ? Colors.white : Colors.grey[350] ),
-                                  child: isEditable[i][j] ? TextField(controller: cellControllers[i][j], focusNode: focusNodes[i][j], decoration: InputDecoration(isDense: false, border: InputBorder.none),textAlign: TextAlign.center, textAlignVertical: TextAlignVertical.center, enableInteractiveSelection: false,keyboardType: TextInputType.number,showCursor: false,style: TextStyle(fontSize: MediaQuery.of(context).size.width/(6*3), fontWeight: FontWeight.bold),inputFormatters: [LengthLimitingTextInputFormatter(1)], onChanged: (value){
-                                    boxBoardNumbers[i][j] = cellControllers[i][j].text = !'123456789'.contains(value) ? '': value  ;
-                                  }, onTap: (){
-                                    setState(() {
-
-                                    });
-                                  }) : Center(
-                                    child: Text(boxBoardNumbers[i][j], style: TextStyle(fontSize: MediaQuery.of(context).size.width/(6*3), fontWeight: FontWeight.bold),),
+                        return Container(
+                          decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.black)),
+                          child: GridView.count(
+                            crossAxisCount: 3,
+                            physics: NeverScrollableScrollPhysics(),
+                            children: List.generate(9, (j) {
+                              return isEditable[i][j] ? InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    selectedRowPosition = i ;
+                                    selectedColumnPosition = j ;
+                                    isSelected = List.generate(9, (i) => List.generate(9, (j) => false )) ;
+                                    isSelected[i][j] = true ;
+                                  });
+                                },
+                                child: Center(
+                                  child: Stack(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: (MediaQuery.of(context).size.width - 6*outerPadding)/3,
+                                        height: (MediaQuery.of(context).size.width - 6*outerPadding)/3,
+                                        child: AnimatedContainer(
+                                          duration: Duration(milliseconds: 100),
+                                          curve: Curves.linear,
+                                          decoration: BoxDecoration(border: Border.all( width: innerPadding, color: Colors.black), color: !isCorrect[i][j] && boxBoardNumbers[i][j] != '' ? Colors.red : Colors.white),
+                                          child: Center(
+                                            child: Text(boxBoardNumbers[i][j], style: TextStyle(fontSize: MediaQuery.of(context).size.width/(5*3), fontWeight: FontWeight.bold, color: !isCorrect[i][j] ? Colors.white : Colors.black),),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 0.0,
+                                        left: 0.0,
+                                        child: Container(
+                                          width: (MediaQuery.of(context).size.width - 24 )/9,
+                                          height: (MediaQuery.of(context).size.width - 24 )/9,
+                                          decoration: BoxDecoration(border: Border.all(color: isSelected[i][j] ? ( (isCorrect[i][j] || boxBoardNumbers[i][j] == '') ? Colors.amberAccent : Colors.white) : Colors.transparent, width: 4.0)),
+                                        ),
+                                      ),
+                                    ],
+                                  ), ),
+                              ) : Center(
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds: 100),
+                                  curve: Curves.linear,
+                                  decoration: BoxDecoration(border: Border.all( width: innerPadding, color: Colors.black), color: !isCorrect[i][j] && boxBoardNumbers[i][j] != '' ?  Colors.red[900] : Colors.grey[350] ),
+                                  child: Center(
+                                    child: Text(boxBoardNumbers[i][j], style: TextStyle(fontSize: MediaQuery.of(context).size.width/(5*3), fontWeight: FontWeight.bold, color: !isCorrect[i][j] ? Colors.white : Colors.black),),
                                   ),
-                                ),
-                              ), );
-                          }),
+                                ), );
+                            }),
+                          ),
                         );
                       })
                   ),
@@ -226,11 +339,11 @@ class _NumbersBoardState extends State<NumbersBoard>{
   }
   
   void initiateBoard( List<List<String>> receivedNumbers, List<List<bool>> receivedEditables){
-    if(receivedNumbers.toString().compareTo(emptyStringList.toString()) != 0){
+    if(receivedNumbers.toString().compareTo(List.generate(9, (i) => List.generate(9, (j) => '' )).toString()) != 0){
       boxBoardNumbers = receivedNumbers ;
       boardPopulated = true ;
     }
-    if(receivedEditables.toString().compareTo(emptyBoolList.toString()) != 0){
+    if(receivedEditables.toString().compareTo(List.generate(9, (i) => List.generate(9, (j) => true )).toString()) != 0){
       isEditable = receivedEditables ;
       boardPopulated = true ;
     }
@@ -246,8 +359,6 @@ class _NumbersBoardState extends State<NumbersBoard>{
     List<String> horizontalRow = <String>[];
 
     List<String> verticalColumn = <String>[];
-
-    List<String> numberSquare = <String>[];
 
     bool solvedHorizontally = true ;
 
@@ -281,8 +392,6 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
           verticalBoardNumbers[i] = verticalColumn.toList() ;
 
-            numberSquare = List.generate(9, (x) => boxBoardNumbers[i][x]);
-            print('squares array  is : \n $numberSquare');
 
           for(int j = 0 ; j < 9 ; j++){
 
@@ -290,7 +399,8 @@ class _NumbersBoardState extends State<NumbersBoard>{
               if(boxBoardNumbers[i][j] == ''){
                 print('The ${j + 1}th cell of the ${i + 1}th box is empty !');
                 isCorrect[i][j] = squaresComplete = false ;
-              }else{
+              }
+              if ((boxBoardNumbers[i].indexOf('${j + 1}') != boxBoardNumbers[i].lastIndexOf('${j + 1}')) && boxBoardNumbers[i].indexOf('${j + 1}') != -1){
                 print('${j + 1} is not unique in the ${i + 1}th box');
                 print('first index of ${j + 1 } is : ${boxBoardNumbers[i].indexOf('${j + 1}')}');
                 print('last index of ${j + 1 } is : ${boxBoardNumbers[i].lastIndexOf('${j + 1}')}');
@@ -300,8 +410,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
 
 
-
-            if( (horizontalBoardNumbers[i].indexOf('${j + 1}') != horizontalBoardNumbers[i].lastIndexOf('${j + 1}')) || horizontalBoardNumbers[i][j] == ''){
+            if( ((horizontalBoardNumbers[i].indexOf('${j + 1}') != horizontalBoardNumbers[i].lastIndexOf('${j + 1}')) && horizontalBoardNumbers[i].indexOf('${j + 1}') != -1)|| horizontalBoardNumbers[i][j] == ''){
               if(horizontalBoardNumbers[i][j] == ''){
                 print('The ${j + 1}th cell of the ${i + 1}th row is empty !');
                 for(int a = 0 ; a <  3 ; a++){
@@ -311,7 +420,8 @@ class _NumbersBoardState extends State<NumbersBoard>{
                     }
                   }
                 }
-              }else{
+              }
+              if((horizontalBoardNumbers[i].indexOf('${j + 1}') != horizontalBoardNumbers[i].lastIndexOf('${j + 1}')) && horizontalBoardNumbers[i].indexOf('${j + 1}') != -1){
                 print('${j + 1} is not unique in the ${i + 1}th row');
                 print('first index of ${j + 1 } is : ${horizontalBoardNumbers[i].indexOf('${j + 1}')}');
                 print('last index of ${j + 1 } is : ${horizontalBoardNumbers[i].lastIndexOf('${j + 1}')}');
@@ -328,7 +438,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
 
 
 
-            if( (verticalBoardNumbers[i].indexOf('${j + 1}') != verticalBoardNumbers[i].lastIndexOf('${j + 1}')) || verticalBoardNumbers[i][j] == ''){
+            if( ((verticalBoardNumbers[i].indexOf('${j + 1}') != verticalBoardNumbers[i].lastIndexOf('${j + 1}')) && verticalBoardNumbers[i].indexOf('${j + 1}') != -1) || verticalBoardNumbers[i][j] == ''){
               if(verticalBoardNumbers[i][j] == ''){
                 print('The ${j + 1}th cell of the ${i + 1}th column is empty !');
                 for(int x = 0 ; x < 9 ; x = x + 3){
@@ -338,7 +448,8 @@ class _NumbersBoardState extends State<NumbersBoard>{
                     }
                   }
                 }
-              }else{
+              }
+              if((verticalBoardNumbers[i].indexOf('${j + 1}') != verticalBoardNumbers[i].lastIndexOf('${j + 1}')) && verticalBoardNumbers[i].indexOf('${j + 1}') != -1){
                 print('${j + 1} is not unique in the ${i + 1}th column');
                 print('first index of ${j + 1 } is : ${verticalBoardNumbers[i].indexOf('${j + 1}')}');
                 print('last index of ${j + 1 } is : ${verticalBoardNumbers[i].lastIndexOf('${j + 1}')}');
