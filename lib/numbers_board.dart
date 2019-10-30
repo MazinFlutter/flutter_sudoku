@@ -168,7 +168,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
                             ),
                             InkWell(
                               onTap: (){
-
+                                clearBoard() ;
                               },
                               child: Container(
                                 height: clockFontSize*2,
@@ -498,6 +498,21 @@ class _NumbersBoardState extends State<NumbersBoard>{
       moveClock();
 
     });
+  }
+
+  void clearBoard() {
+    //reset fields which are editable to empty string.
+    //مسح الأرقام من المربعات الخانات القابلة للتعديل
+    for(int i = 0 ; i < 9 ; i++){
+      for(int j = 0 ; j < 9 ; j++){
+        if(isEditable[i][j]){
+          boxBoardNumbers[i][j] = '' ;
+        }
+      }
+    }
+    //then perform a check to remove any highlighting caused by previous answers.
+    //ثم التحقق من الإجابات مرة أخرى وذلك لمحو الألوان الناتجة عن الاجابات السابقة
+    checkSolution() ;
   }
 
   void saveUnfinishedSolution(List<List<String>> numbers, List<List<bool>> areEditableList, UserDataBloc userBloc){
