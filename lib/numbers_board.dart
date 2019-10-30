@@ -360,30 +360,12 @@ class _NumbersBoardState extends State<NumbersBoard>{
           }
         }
 
-        showAnswer();
-
         print('Horizotally : $solvedHorizontally');
         print('Vertically : $solvedVertically');
         print('Squares : $squaresComplete');
 
     print((solvedHorizontally & solvedVertically & squaresComplete) ? 'Congratulations !' : 'Incorrect solution ! please try again');
 
-  }
-
-  showAnswer() async {
-    print('box array is : \n $boxBoardNumbers');
-    print('horizontal array is : \n $horizontalBoardNumbers');
-    print('vertical array is : \n $verticalBoardNumbers');
-    setState(() {
-      currentlyChecking = true ;
-    });
-
-    Future.delayed( Duration(seconds: 2), (){
-      setState(() {
-        currentlyChecking = false ;
-      });
-
-    });
   }
 
   moveClock() async {
