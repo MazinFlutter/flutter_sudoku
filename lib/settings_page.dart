@@ -15,7 +15,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Theme.of(context).primaryColorLight,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context, 'SettingsPageTitle')),
