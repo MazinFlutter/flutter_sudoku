@@ -21,9 +21,9 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(AppLocalizations.of(context, 'SettingsPageTitle')),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/numbers_3.jpg'), fit: BoxFit.cover),
-        ),
+        /*decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage('assets/images/numbers_1.png'), fit: BoxFit.cover),
+        ),*/
         child: SettingsPageContent(),
       )
     );
