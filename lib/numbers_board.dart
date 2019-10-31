@@ -296,11 +296,11 @@ class _NumbersBoardState extends State<NumbersBoard>{
                                         ),
                                       ),
                                       Positioned(
-                                        top: 0.0,
-                                        left: 0.0,
+                                        top: innerPadding,
+                                        left: innerPadding,
                                         child: Container(
-                                          width: (MediaQuery.of(context).size.width - 24 )/9,
-                                          height: (MediaQuery.of(context).size.width - 24 )/9,
+                                          width: (MediaQuery.of(context).size.width - 24 )/9 + innerPadding/2,
+                                          height: (MediaQuery.of(context).size.width - 24 )/9+ innerPadding/2,
                                           decoration: BoxDecoration(border: Border.all(color: isSelected[i][j] ? ( (isCorrect[i][j] || boxBoardNumbers[i][j] == '') ? Colors.amberAccent : Colors.white) : Colors.transparent, width: 4.0)),
                                         ),
                                       ),
