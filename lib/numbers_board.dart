@@ -214,7 +214,7 @@ class _NumbersBoardState extends State<NumbersBoard>{
                         child: Container(
                           width: MediaQuery.of(context).size.width/12.5,
                           height: MediaQuery.of(context).size.width/12.5,
-                          decoration: BoxDecoration(border: Border.all(width: 2.0, color: Colors.black), borderRadius: BorderRadius.circular(5.0)),
+                          decoration: BoxDecoration(border: Border.all(width: 2.0, color: Colors.black), borderRadius: BorderRadius.circular(4.0)),
                           child: Center(
                               child: i != 9 ? Text((i + 1).toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),) : Icon(Icons.backspace, size: 20.0,)
                           ),
