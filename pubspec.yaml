@@ -20,6 +20,7 @@ dependencies:
 
   flutter_cache_manager: ^0.2.0+1
   flutter_spinning_wheel: ^1.1.0
+  giffy_dialog: ^1.5.0
   image: ^2.1.4
   intro_slider: ^2.2.8
   rxdart: ^0.21.0
