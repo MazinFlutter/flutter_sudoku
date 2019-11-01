@@ -262,11 +262,6 @@ class UserDataBloc extends BlocBase{
 
   }
 
-  saveSettings() async {
-    profilePreferences.setString('Locale',localeChoiceSubject.stream.value) ;
-    profilePreferences.setInt('Color', colorChoiceSubject.stream.value) ;
-  }
-
   saveGameData() async {
     profilePreferences.setStringList('numbersList', userSolutionSubject.stream.value) ;
     profilePreferences.setStringList('editableBlocksList', editableBlocksSubject.stream.value) ;
