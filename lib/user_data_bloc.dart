@@ -185,6 +185,21 @@ class UserDataBloc extends BlocBase{
           setUserSolution(profilePreferences.getStringList('numbersList') != null ? profilePreferences.getStringList('numbersList') : <String>[]);
 
         }
+    }else{
+      //In case there's no stored preferences these values will be used
+      //في حالة عدم وحود خيارات محفوظة سيتم استخدام هذه القيم
+
+      //Red Color
+      //اللون الأحمر
+      setColorChoice(0);
+
+      //English language
+      //اللغة الانجليزية
+      setLocaleChoice('en');
+
+      //No previously stored game
+      //لوجود للعبة سابقة
+      setIsThereAPreviousGame(false);
     }
   }
 
