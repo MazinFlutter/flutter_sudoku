@@ -48,6 +48,8 @@ class UserDataBloc extends BlocBase{
 
   Stream<bool> getIsThereAPreviousGame() => isThereAPreviousGame.stream.distinct() ;
 
+  Stream<int> getDifficultyLevel() => difficultyLevelSubject.stream.distinct() ;
+
 
   void setColorChoice (int colorChoice){
     colorChoiceSubject.sink.add(colorChoice) ;
@@ -77,6 +79,13 @@ class UserDataBloc extends BlocBase{
 
   void setIsThereAPreviousGame(bool isThereAGame){
     isThereAPreviousGame.sink.add(isThereAGame);
+  }
+
+  void setDifficultyLevel (int difficulty){
+    difficultyLevelSubject.sink.add(difficulty);
+    //Saving selected difficulty level as soon as it is changed.
+    //حفظ مستوى الصعوبة بمجرد تغييره
+    profilePreferences.setInt('Difficulty', difficultyLevelSubject.stream.value) ;
   }
 
 
@@ -171,6 +180,8 @@ class UserDataBloc extends BlocBase{
 
         setIsThereAPreviousGame(false);
 
+        setDifficultyLevel(profilePreferences.getInt('Difficulty') != null ? profilePreferences.getInt('Difficulty') : 2);
+
         //Load unfinished solution from storage if there is a one
         //تحميل اللعبة السابقة من وحدة التخزين إذا كانت هنالك واحدة
 
@@ -200,6 +211,10 @@ class UserDataBloc extends BlocBase{
       //No previously stored game
       //لوجود للعبة سابقة
       setIsThereAPreviousGame(false);
+
+      //medium difficulty
+      //لعبة متوسطة الصعوبة
+      setDifficultyLevel(2);
     }
   }
 
