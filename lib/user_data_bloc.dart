@@ -51,10 +51,16 @@ class UserDataBloc extends BlocBase{
 
   void setColorChoice (int colorChoice){
     colorChoiceSubject.sink.add(colorChoice) ;
+    //Saving selected color as soon as it is changed.
+    //حفظ اللون بمجرد تغييره
+    profilePreferences.setInt('Color', colorChoiceSubject.stream.value) ;
   }
 
   void setLocaleChoice (String languageCode){
     localeChoiceSubject.sink.add(languageCode) ;
+    //Saving selected language as soon as it is changed.
+    //حفظ اللغة بمجرد تغييرها
+    profilePreferences.setString('Locale', localeChoiceSubject.stream.value) ;
   }
 
   void setEditableBlocks (List<String> editableBlocksList){
