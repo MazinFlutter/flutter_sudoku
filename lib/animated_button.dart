@@ -70,7 +70,7 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
                 //Set as half the height so that RaisedButton Sides are half Circles.
                 //قيمة انحراف حواف الزر هي نصف ارتفاع الزر، وذلك لتصبح الجوانب عبارة عن أنصاف دوائر.
                   borderRadius: BorderRadius.circular(buttonHeight/2),
-                  side: BorderSide(color: Colors.lightBlueAccent)
+                  side: BorderSide(color: Theme.of(context).primaryColorLight)
               ),
               child: Center(child: Text(widget.title,style: TextStyle(fontSize: 24.0,color: Colors.white)),),
             ),
