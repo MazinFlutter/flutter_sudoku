@@ -13,7 +13,9 @@ import 'board_numbers.dart';
 
 class UserDataBloc extends BlocBase{
 
-  static List<Color> appPrimaryColors = <Color>[Colors.cyan,Colors.orange,Colors.blue,Colors.red, Colors.purple];
+  //IOS default color palette to be used as theme color choices.
+  //ألوان الـIOS الافتراضية، التي ستستخدم كألوان للتطبيق
+  static List<Color> appPrimaryColors = <Color>[Colors.red,Colors.orange,Colors.green,Colors.blue, Colors.indigo];
 
   SharedPreferences profilePreferences ;
 
