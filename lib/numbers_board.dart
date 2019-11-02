@@ -3,6 +3,7 @@ import 'package:flutter_sudoku/user_data_bloc.dart';
 
 import 'app_localizations.dart';
 import 'bloc_base.dart';
+import 'package:giffy_dialog/giffy_dialog.dart' ;
 
 class NumbersBoard extends StatefulWidget {
 
