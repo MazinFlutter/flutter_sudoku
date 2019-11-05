@@ -20,8 +20,10 @@ class AppLocalizations {
       'Instructions': 'Instructions',
       'Exit': 'Exit',
       //Game Strings
-      'ClearAll' : 'Clear All',
       'CheckSolution' : 'Check Solution',
+      'ClearAll' : 'Clear All',
+      'Congratulations' : 'Congratulations !',
+      'Time' : 'Time',
       //Settings Page Strings
       'Appearance': 'Appearance',
       'Color' : 'Color',
@@ -51,8 +53,10 @@ class AppLocalizations {
       'Instructions' : 'تعليمات',
       'Exit' : 'خروج',
       //Game Strings
+      'Congratulations' : 'تهانينا !',
       'ClearAll' : 'مسح الكل',
       'CheckSolution' : 'تحقق من الحل',
+      'Time' : 'الوقت',
       //Settings Page Strings
       'Appearance' : 'المظهر',
       'Color' : 'اللون',
