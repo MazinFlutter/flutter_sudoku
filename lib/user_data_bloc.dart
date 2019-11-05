@@ -35,6 +35,12 @@ class UserDataBloc extends BlocBase{
 
   var pastGameDurationSubject = BehaviorSubject<int>() ;
 
+  var easyHighScoresSubject = BehaviorSubject<List<String>>() ;
+
+  var mediumHighScoresSubject = BehaviorSubject<List<String>>() ;
+
+  var hardHighScoresSubject = BehaviorSubject<List<String>>() ;
+
 
   Stream<MaterialColor> getColor() => colorChoiceSubject.stream.distinct().transform(transformColorChoice) ;
 
@@ -49,6 +55,12 @@ class UserDataBloc extends BlocBase{
   Stream<bool> getIsThereAPreviousGame() => isThereAPreviousGame.stream.distinct() ;
 
   Stream<int> getDifficultyLevel() => difficultyLevelSubject.stream.distinct() ;
+
+  Stream<List<String>> getEasyHighScores() => easyHighScoresSubject.stream.distinct() ;
+
+  Stream<List<String>> getMediumHighScores() => mediumHighScoresSubject.stream.distinct() ;
+
+  Stream<List<String>> getHardHighScores() => hardHighScoresSubject.stream.distinct() ;
 
 
   void setColorChoice (int colorChoice){
@@ -86,6 +98,43 @@ class UserDataBloc extends BlocBase{
     //Saving selected difficulty level as soon as it is changed.
     //حفظ مستوى الصعوبة بمجرد تغييره
     profilePreferences.setInt('Difficulty', difficultyLevelSubject.stream.value) ;
+  }
+
+  void setEasyHighScores (List<String> easyHighScore){
+    List<String> savedEasyHighScores ;
+    savedEasyHighScores = easyHighScoresSubject.stream.value != null ? easyHighScoresSubject.stream.value : List() ;
+    savedEasyHighScores.addAll(easyHighScore) ;
+    if(savedEasyHighScores.length != 0){
+      savedEasyHighScores.sort((a,b) => a.compareTo(b));
+      savedEasyHighScores = savedEasyHighScores.sublist(0, savedEasyHighScores.length > 5 ? 5 : savedEasyHighScores.length) ;
+    }
+    easyHighScoresSubject.sink.add(savedEasyHighScores);
+    profilePreferences.setStringList('EasyHighScores', savedEasyHighScores) ;
+  }
+
+  void setMediumHighScores (List<String> mediumHighScore){
+    List<String> savedMediumHighScores ;
+    savedMediumHighScores = mediumHighScoresSubject.stream.value != null ? mediumHighScoresSubject.stream.value : List() ;
+    savedMediumHighScores.addAll(mediumHighScore) ;
+    if(savedMediumHighScores.length != 0){
+      savedMediumHighScores.sort((a,b) => a.compareTo(b));
+      savedMediumHighScores = savedMediumHighScores.sublist(0, savedMediumHighScores.length > 5 ? 5 : savedMediumHighScores.length) ;
+    }
+    mediumHighScoresSubject.sink.add(savedMediumHighScores);
+    profilePreferences.setStringList('MediumHighScores', savedMediumHighScores) ;
+  }
+
+  void setHardHighScores (List<String> hardHighScore){
+    List<String> savedHardHighScores ;
+    savedHardHighScores = hardHighScoresSubject.stream.value != null ? hardHighScoresSubject.stream.value : List() ;
+    savedHardHighScores.addAll(hardHighScore) ;
+    if(savedHardHighScores.length != 0){
+      savedHardHighScores.sort((a,b) => a.compareTo(b));
+      savedHardHighScores = savedHardHighScores.sublist(0, savedHardHighScores.length > 5 ? 5 : savedHardHighScores.length) ;
+      print(savedHardHighScores);
+    }
+    hardHighScoresSubject.sink.add(savedHardHighScores);
+    profilePreferences.setStringList('HardHighScores', savedHardHighScores) ;
   }
 
 
@@ -181,6 +230,12 @@ class UserDataBloc extends BlocBase{
         setIsThereAPreviousGame(false);
 
         setDifficultyLevel(profilePreferences.getInt('Difficulty') != null ? profilePreferences.getInt('Difficulty') : 2);
+        
+        setEasyHighScores(profilePreferences.getStringList('EasyHighScores') != null ? profilePreferences.getStringList('EasyHighScores') : <String>[]);
+
+        setMediumHighScores(profilePreferences.getStringList('MediumHighScores') != null ? profilePreferences.getStringList('MediumHighScores') : <String>[]);
+
+        setHardHighScores(profilePreferences.getStringList('HardHighScores') != null ? profilePreferences.getStringList('HardHighScores') : <String>[]);
 
         //Load unfinished solution from storage if there is a one
         //تحميل اللعبة السابقة من وحدة التخزين إذا كانت هنالك واحدة
@@ -215,6 +270,14 @@ class UserDataBloc extends BlocBase{
       //medium difficulty
       //لعبة متوسطة الصعوبة
       setDifficultyLevel(2);
+
+      //No previous high scores
+      //لا توجد درجات عالية
+      setEasyHighScores(<String>[]);
+
+      setMediumHighScores(<String>[]);
+
+      setHardHighScores(<String>[]);
     }
   }
 
@@ -295,6 +358,12 @@ class UserDataBloc extends BlocBase{
     pastGameDurationSubject.close() ;
 
     userSolutionSubject.close() ;
+
+    easyHighScoresSubject.close() ;
+
+    mediumHighScoresSubject.close() ;
+
+    hardHighScoresSubject.close() ;
 
   }
 
