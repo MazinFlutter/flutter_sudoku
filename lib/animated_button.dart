@@ -56,6 +56,8 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
     buttonHeight = MediaQuery.of(context).size.height/12;
 
     return GestureDetector(
+      onLongPress: _onLongPress,
+      onLongPressEnd: _onLongPressEnd,
       onTapDown: _onTapDown,
       onTapUp: _onTapUp,
       child: Transform.scale(
@@ -89,6 +91,22 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
   }
 
   void _onTapUp(TapUpDetails details) {
+    _controller.reverse();
+  }
+
+  void _onLongPress() async{
+    _controller.forward();
+    //This delay is put so that the animation has some time to be shown to user before navigating.
+    //هذا التأخير موضوع بغرض اتاحة زمن لعرض تأثيير تغيير الحجم قبل الذهاب إلى صفحة أخرى.
+    Future.delayed( Duration(seconds: 1), (){
+      //reversing the scale down here because onLongPressEnd is never triggered.
+      //اعادة تكبير الزر مرة أخرى من هنا بسبب أن onLongPressEnd لا تنادى أبدا
+      _onLongPressEnd(LongPressEndDetails());
+      widget.onPressed();
+    });
+  }
+
+  void _onLongPressEnd(LongPressEndDetails details) async{
     _controller.reverse();
   }
 
