@@ -388,6 +388,21 @@ class UserDataBloc extends BlocBase{
   }
 
 
+  saveWinningTime(String time){
+    List<String> timeArray = <String>[time] ;
+    switch(difficultyLevelSubject.stream.value){
+      case 0 : setEasyHighScores(timeArray) ;
+      break ;
+      case 1 : setMediumHighScores(timeArray) ;
+      break ;
+      case 2 : setHardHighScores(timeArray) ;
+      break ;
+      default : setMediumHighScores(timeArray) ;
+      break ;
+    }
+  }
+
+
 
 }
 
