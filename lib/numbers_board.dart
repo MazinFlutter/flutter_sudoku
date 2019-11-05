@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_sudoku/user_data_bloc.dart';
 
@@ -89,144 +90,164 @@ class _NumbersBoardState extends State<NumbersBoard>{
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text(AppLocalizations.of(context, pastSeconds == 0 ? 'NewGame' : 'Continue'),),),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/numbers_4.jpg'), fit: BoxFit.cover),
-        ),
-        child: Opacity(
-          //Making game board 10% transparent, so the background image'll have a beautiful effect on it.
-          //يقوم بجعل لوحة الأرقام شفافة بنسبة عشرة بالمئة ، وذلك لتضفي الخلفية تأثيرا جميلا عليها
-          opacity: 0.9,
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.only(top: 30.0, bottom: 20.0, left: 10.0, right: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            //The timer and pause button.
-                            //المؤقت و زر الايقاف المؤقت
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(width: 2.0, color: Colors.black),
-                                //added (2.0) to the radius value to fully wrap the Container child.
-                                //تمت اضافة (2.0) لنصف قطر الـContainer وذلك ليحيطها الخط تماما
-                                borderRadius: BorderRadius.circular(clockFontSize + 2.0),
+      body: Stack(
+        children: <Widget>[
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(gameSolved ? 'assets/images/fireworks.gif' : 'assets/images/numbers_4.jpg'), fit: BoxFit.cover),
+              ),
+              child:  BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.0),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Opacity(
+            //Making game board 10% transparent, so the background image'll have a beautiful effect on it.
+            //يقوم بجعل لوحة الأرقام شفافة بنسبة عشرة بالمئة ، وذلك لتضفي الخلفية تأثيرا جميلا عليها
+            opacity: 0.9,
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.only(top: 30.0, bottom: 20.0, left: 10.0, right: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              //The timer and pause button.
+                              //المؤقت و زر الايقاف المؤقت
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 2.0, color: Colors.black),
+                                  //added (2.0) to the radius value to fully wrap the Container child.
+                                  //تمت اضافة (2.0) لنصف قطر الـContainer وذلك ليحيطها الخط تماما
+                                  borderRadius: BorderRadius.circular(clockFontSize + 2.0),
+                                ),
+                                //The purpose of the ClipRRect Widget is to make circular clip to Container's nested Widgets.
+                                //الغرض من الـClipRRect هو عمل قطع نصف دائري للـWidgets المدرجة داخل الـContainer
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(clockFontSize),
+                                  child: Container(
+                                    height: clockFontSize*2,
+                                    width: clock.length * clockFontSize,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(clockFontSize),
+                                    ),
+                                    child: Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          InkWell(
+                                            onTap: (){
+                                              Navigator.of(context).pop() ;
+                                            },
+                                            child: Container(
+                                              width: clockFontSize*2,
+                                              height: clockFontSize*2,
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context).primaryColor,
+                                              ),
+                                              child: Icon(Icons.pause, color: Colors.white,),
+                                            ),
+                                          ),
+                                          Center(
+                                            child: StreamBuilder(
+                                              stream: userBloc.getPastGameDuration(),
+                                              initialData: 0,
+                                              builder: (context, pastDurationSnapshot){
+                                                if(!clockInitialized){
+                                                  initiateClock(pastDurationSnapshot.data) ;
+                                                }
+                                                return Text(clock, style: TextStyle(fontSize: clockFontSize, color: Colors.black, fontWeight: FontWeight.bold),) ;
+                                              },
+                                            ),
+                                          ),
+                                          Container(),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              //The purpose of the ClipRRect Widget is to make circular clip to Container's nested Widgets.
-                              //الغرض من الـClipRRect هو عمل قطع نصف دائري للـWidgets المدرجة داخل الـContainer
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(clockFontSize),
+                              InkWell(
+                                onTap: (){
+                                  clearBoard() ;
+                                },
                                 child: Container(
                                   height: clockFontSize*2,
                                   width: clock.length * clockFontSize,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(clockFontSize),
+                                    border: Border.all(width: 2.0, color: Colors.black),
                                   ),
-                                  child: Directionality(
-                                    textDirection: TextDirection.ltr,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        InkWell(
-                                          onTap: (){
-                                            Navigator.of(context).pop() ;
-                                          },
-                                          child: Container(
-                                            width: clockFontSize*2,
-                                            height: clockFontSize*2,
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context).primaryColorDark,
-                                              //borderRadius: BorderRadius.circular(clockFontSize),
-                                            ),
-                                            child: Icon(Icons.pause, color: Colors.white,),
-                                          ),
-                                        ),
-                                        Center(
-                                          child: StreamBuilder(
-                                            stream: userBloc.getPastGameDuration(),
-                                            initialData: 0,
-                                            builder: (context, pastDurationSnapshot){
-                                              if(!clockInitialized){
-                                                initiateClock(pastDurationSnapshot.data) ;
-                                              }
-                                              return Text(clock, style: TextStyle(fontSize: clockFontSize, color: Colors.black, fontWeight: FontWeight.bold),) ;
-                                            },
-                                          ),
-                                        ),
-                                        Container(),
-                                      ],
-                                    ),
+                                  child: Center(
+                                    child: Text(AppLocalizations.of(context, 'ClearAll'), style: TextStyle(fontSize: clockFontSize, color: Colors.red, fontWeight: FontWeight.bold),),
                                   ),
                                 ),
                               ),
-                            ),
-                            InkWell(
-                              onTap: (){
-                                clearBoard() ;
-                              },
-                              child: Container(
-                                height: clockFontSize*2,
-                                width: clock.length * clockFontSize,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(clockFontSize),
-                                  border: Border.all(width: 2.0, color: Colors.black),
-                                ),
-                                child: Center(
-                                  child: Text(AppLocalizations.of(context, 'ClearAll'), style: TextStyle(fontSize: clockFontSize, color: Colors.red, fontWeight: FontWeight.bold),),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      //fixing text direction inside the board, so it won't be flipped when changing app language.
-                      //جعل اتجاه النص ثابتا، وذلك لكي لا تعكس اللوحة عند تغيير اللغة من الضبط.
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: drawBoard(0.5),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              //The Number buttons at the button of the Screen used to fill the Soduko board.
-              //أزرار الأرقام في أسفل الشاشة التي تملأ بها خانات السودوكو
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(10, (i) => InkWell(
-                      onTap: (){
-                        if(selectedRowPosition != -1 && selectedColumnPosition != -1){
-                          boxBoardNumbers[selectedRowPosition][selectedColumnPosition] = i != 9 ? (i + 1).toString() : '' ;
-                          checkSolution();
-                        }
-                      },
-                      child: Card(
-                        elevation: 2.0,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width/12.5,
-                          height: MediaQuery.of(context).size.width/12.5,
-                          decoration: BoxDecoration(border: Border.all(width: 2.0, color: Colors.black), borderRadius: BorderRadius.circular(4.0)),
-                          child: Center(
-                              child: i != 9 ? Text((i + 1).toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),) : Icon(Icons.backspace, size: 20.0,)
+                            ],
                           ),
                         ),
-                      )
-                  )),
+                        //fixing text direction inside the board, so it won't be flipped when changing app language.
+                        //جعل اتجاه النص ثابتا، وذلك لكي لا تعكس اللوحة عند تغيير اللغة من الضبط.
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: drawBoard(0.5),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                //The Number buttons at the button of the Screen used to fill the Soduko board.
+                //أزرار الأرقام في أسفل الشاشة التي تملأ بها خانات السودوكو
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List.generate(10, (i) => InkWell(
+                        onTap: (){
+                          if(selectedRowPosition != -1 && selectedColumnPosition != -1){
+                            boxBoardNumbers[selectedRowPosition][selectedColumnPosition] = i != 9 ? (i + 1).toString() : '' ;
+                            checkSolution();
+                          }
+                        },
+                        child: Card(
+                          elevation: 2.0,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width/12.5,
+                            height: MediaQuery.of(context).size.width/12.5,
+                            decoration: BoxDecoration(border: Border.all(width: 2.0, color: Colors.black), borderRadius: BorderRadius.circular(4.0)),
+                            child: Center(
+                                child: i != 9 ? Text((i + 1).toString(), style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),) : Icon(Icons.backspace, size: 20.0,)
+                            ),
+                          ),
+                        )
+                    )),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+
+        ],
       ),
     );
   }
