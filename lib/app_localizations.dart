@@ -41,6 +41,18 @@ class AppLocalizations {
       'UnfinishedGameMessage' : 'starting a new game will delete the old one, proceed ?',
       'Cancel' : 'Cancel',
       'StartANewGame' : 'Start a New Game',
+      //HighScores Page Strings
+      'NoScores' : 'No Scores',
+      //Instructions Page Strings
+      'Previous' : 'Previous',
+      'Next' : 'Next',
+      'Done' : 'Done',
+      'Rules': 'Rules',
+      'HowToPlay' : 'How To Play',
+      'Winning' : 'Winning !',
+      'RulesDescription': 'Fill the board with numbers from one to nine, without repeating any numbers within columns, rows, and squares.',
+      'HowToPlayDescription' : 'Tap white blocks and add numbers. \nAfter any change your answer will be checked automatically, and wrong answers will be highlighted along with conflicting numbers.',
+      'WinningDescription' : 'After filling all the board correctly, the game will end, and your time will be recorded. \n\nChallenge yourself into beating your own record at different difficulty levels !',
 
     },
     'ar': {
@@ -74,6 +86,19 @@ class AppLocalizations {
       'UnfinishedGameMessage' : 'بدء لعبة جديدة سيمحو اللعبة السابقة، متابعة ؟ ',
       'Cancel' : 'الغاء',
       'StartANewGame' : 'بداية لعبة جديدة',
+      //نصوص شاشة الدرجات العالية
+      'NoScores' : 'لا توجد درجات',
+      //نصوص شاشة التعليمات
+      'Previous' : 'السابق',
+      'Next' : 'التالي',
+      'Done' : 'النهاية',
+      'Rules': 'القواعد',
+      'HowToPlay' : 'كيفية اللعب',
+      'Winning' : 'الفوز !',
+      'RulesDescription': 'املأ المربعات الفارغة بالأرقام من واحد إلى تسعة، بدون تكرار أي رقم داخل الصف أو العمود أو المربع.',
+      'HowToPlayDescription' : 'انقر على المربعات البيضاء وأضف الأرقام، بعد كل تغيير سيتم التحقق تلقائيا واظهار الاجابات الخاطئة والأرقام المتعارضة. ',
+      'WinningDescription' : ' بعد ملء اللوحة بصورة صحيحة، ستنتهي اللعبة وسيتم حفظ زمنك. '
+          '\n\nتحدى نفسك وحطم أرقامك القياسية في كل مستوى.',
     }
   };
 
